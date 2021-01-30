@@ -1,7 +1,6 @@
 #pragma once
 #include <Arduino.h>
 
-#include "trmLogin.h"
 
 namespace Terminal
 {
@@ -17,7 +16,7 @@ namespace Terminal
 	/// поток берется из последовтально порта
 	/// 
 	///--------------------------------------------------------------------------------------
-    template <class TTerminal>
+    template <class TTerminal, class TSecurity>
     class TProviderSerial
     {
         public:
@@ -42,14 +41,13 @@ namespace Terminal
             {
                 if (!mTerminal.isConnected(&Serial) && Serial.available())
                 {
-                    //есть данные, но нет 
-                    switch (mLogin.process(&Serial))
+                    //есть данные, но нет соеденение с терминалом
+                    switch (mSecurity.process(&Serial))
                     {
-                        case ALogin::accept     : mTerminal.connect(&Serial); break; //доступ разрешен
-                        case ALogin::deny       : break; //отсутствует доступ
-                        case ALogin::processing : break; //идет процесс аутентификации
+                        case TSecurity::allow      : mTerminal.connect(&Serial); break; //доступ разрешен
+                        case TSecurity::deny       : break; //отсутствует доступ
+                        case TSecurity::processing : break; //идет процесс аутентификации
                     }
-
                 }
             }
             //
@@ -57,7 +55,7 @@ namespace Terminal
         private:
 
             TTerminal &mTerminal;
-            ALogin mLogin;
+            TSecurity mSecurity;
     };
 
 }

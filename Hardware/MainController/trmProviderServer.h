@@ -1,5 +1,4 @@
 #pragma once
-#include "trmLogin.h"
 
 namespace Terminal
 {
@@ -15,7 +14,7 @@ namespace Terminal
 	/// поток берется из сетевого интерфейса
 	/// 
 	///--------------------------------------------------------------------------------------
-    template <class TTerminal>
+    template <class TTerminal, class TSecurity>
     class TProviderServer
     {
         public:
@@ -44,7 +43,6 @@ namespace Terminal
         private:
 
             TTerminal &mTerminal;
-            ALogin mLogin;
     };
 
 }

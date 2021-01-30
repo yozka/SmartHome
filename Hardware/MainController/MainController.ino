@@ -2,7 +2,9 @@
 /*
     по возможности не использовать STL
 */
+#include <Arduino.h>
 
+#include "trmSecurity.h"
 #include "trmTerminal.h"
 #include "trmProviderServer.h"
 #include "trmProviderSerial.h"
@@ -84,8 +86,8 @@ using ATerminal = Terminal::TTerminal<ACommands>;
 
 //терминал для обработки внешних команд
 ATerminal terminal;
-Terminal::TProviderServer<ATerminal> providerServer(terminal);
-Terminal::TProviderSerial<ATerminal> providerSerial(terminal);
+Terminal::TProviderServer<ATerminal, Terminal::ASecurityFree>   providerServer(terminal);
+Terminal::TProviderSerial<ATerminal, Terminal::ASecurityLogin>  providerSerial(terminal);
 
 
 

@@ -198,6 +198,7 @@ namespace Terminal
             {
                 if (mStream)
                 {
+                    mStream->write('-');
                     mStream->write('>');
                 }
                 mCommandLine = "";
