@@ -9,8 +9,12 @@
 #include "trmProviderServer.h"
 #include "trmProviderSerial.h"
 
+#include "sysTimer.h"
+///--------------------------------------------------------------------------------------
 
 
+
+///--------------------------------------------------------------------------------------
 class TestCommandA
 {
     public:
@@ -63,16 +67,31 @@ class TestCommandD
 {
 
     public:
-        static String name() { return F("status");}
+        static String name() { return F("timer");}
         void execute(const Terminal::AParameters &param, Stream *console)
         {
-            console->println(F("--------"));
-
+            console->print(F("Start time test: "));
+            const int timeDelay = param.source().toInt();
+            console->println(timeDelay);
+            const auto time = millis();
+            delay(timeDelay);
+            const auto timeEnd = millis() - time;
+            console->print(F("Actual timer: "));
+            console->println(timeEnd);
         }
 };
+///--------------------------------------------------------------------------------------
 
 
 
+
+
+ ///=====================================================================================
+///
+/// Терминал контроллера
+/// работает с ком портом и через сетевой интерфейс
+/// 
+///--------------------------------------------------------------------------------------
 
 //описаник команд
 using ACommands = Terminal::TCommands<
@@ -93,7 +112,8 @@ Terminal::TProviderSerial<ATerminal, Terminal::ASecurityLogin>  providerSerial(t
 
 
 ///--------------------------------------------------------------------------------------
-
+Time::ASlowTimer slowTimer; //медленный таймер
+///--------------------------------------------------------------------------------------
 
 
 
@@ -109,6 +129,7 @@ void setup()
     providerSerial.setup();
     providerServer.setup();
 
+    
 
     pinMode(LED_BUILTIN, OUTPUT);
 }
@@ -126,9 +147,14 @@ void setup()
 ///--------------------------------------------------------------------------------------
 void loop() 
 {
-        
-    terminal.update();
-    providerServer.update();
-    providerSerial.update();
+    if (slowTimer.active())
+    {
+        //обработка терминала
+        terminal.update();
+        providerServer.update();
+        providerSerial.update();
+    }
+
+    
     
 }
