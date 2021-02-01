@@ -7,6 +7,8 @@
 
 
 
+
+
 #include "trmSecurity.h"
 #include "trmTerminal.h"
 #include "trmProviderServer.h"
@@ -21,10 +23,14 @@
 class TestCommandA
 {
     public:
-        static String name() { return F("help");}
+        static String name() { return F("test");}
+        static void help(Stream &console)
+        {
+            console.println(F("This is the test part of the program"));
+        }
         static void execute(const Terminal::AParameters &param, Stream &console)
         {
-            console.println(F("NOT HELP!"));
+            console.println(F("TEST!"));
         }
 };
 
@@ -33,6 +39,10 @@ class TestCommandB
 
     public:
         static String name() { return F("led");}
+        static void help(Stream &console)
+        {
+            console.println(F("Turn on turn off control the LED"));
+        }
         static void execute(const Terminal::AParameters &param, Stream &console)
         {
             if (param.source().equalsIgnoreCase(F("on")))
@@ -59,6 +69,10 @@ class TestCommandC
 
     public:
         static String name() { return F("exit");}
+        static void help(Stream &console) 
+        {
+             console.println(F("Test exit"));
+        }
         static void execute(const Terminal::AParameters &param, Stream &console)
         {
             console.println(F("need exit.."));
@@ -71,6 +85,10 @@ class TestCommandD
 
     public:
         static String name() { return F("timer");}
+        static void help(Stream &console)
+        {
+            console.println(F("Checking timer operation"));
+        }
         static void execute(const Terminal::AParameters &param, Stream &console)
         {
             console.print(F("Start time test: "));
