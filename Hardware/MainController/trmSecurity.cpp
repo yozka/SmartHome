@@ -20,13 +20,13 @@ void ASecurityLogin::reset()
 
 
 //процесс аутентификации
-ASecurity::EAuthentication ASecurityLogin::process(Stream *stream)
+ASecurity::EAuthentication ASecurityLogin::process(Stream &stream)
 {
     switch (mStatus)
     {
-        case ready          : return cmd_ready(stream);
-        case inputLogin     : return cmd_inputLogin(stream);
-        case inputPasswd    : return cmd_inputPasswd(stream);
+        case ready          : return cmd_ready(&stream);
+        case inputLogin     : return cmd_inputLogin(&stream);
+        case inputPasswd    : return cmd_inputPasswd(&stream);
     }
 
     return processing;

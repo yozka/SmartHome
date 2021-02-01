@@ -3,6 +3,9 @@
     по возможности не использовать STL
 */
 #include <Arduino.h>
+#include <Controllino.h>
+
+
 
 #include "trmSecurity.h"
 #include "trmTerminal.h"
@@ -19,9 +22,9 @@ class TestCommandA
 {
     public:
         static String name() { return F("help");}
-        void execute(const Terminal::AParameters &param, Stream *console)
+        static void execute(const Terminal::AParameters &param, Stream &console)
         {
-            console->println(F("NOT HELP!"));
+            console.println(F("NOT HELP!"));
         }
 };
 
@@ -30,22 +33,22 @@ class TestCommandB
 
     public:
         static String name() { return F("led");}
-        void execute(const Terminal::AParameters &param, Stream *console)
+        static void execute(const Terminal::AParameters &param, Stream &console)
         {
             if (param.source().equalsIgnoreCase(F("on")))
             {
-                digitalWrite(LED_BUILTIN, HIGH);
-                console->println(F("Led on"));
+                digitalWrite(CONTROLLINO_D0, HIGH);
+                console.println(F("Led on"));
             } 
             else
             if (param.source().equalsIgnoreCase(F("off")))
             {
-                digitalWrite(LED_BUILTIN, LOW);
-                console->println(F("Led off"));
+                digitalWrite(CONTROLLINO_D0, LOW);
+                console.println(F("Led off"));
             }
             else
             {
-                console->println(F("led on|off"));
+                console.println(F("led on|off"));
             }
         }
 };
@@ -56,9 +59,9 @@ class TestCommandC
 
     public:
         static String name() { return F("exit");}
-        void execute(const Terminal::AParameters &param, Stream *console)
+        static void execute(const Terminal::AParameters &param, Stream &console)
         {
-            console->println(F("need exit.."));
+            console.println(F("need exit.."));
         }
 };
 
@@ -68,16 +71,16 @@ class TestCommandD
 
     public:
         static String name() { return F("timer");}
-        void execute(const Terminal::AParameters &param, Stream *console)
+        static void execute(const Terminal::AParameters &param, Stream &console)
         {
-            console->print(F("Start time test: "));
+            console.print(F("Start time test: "));
             const int timeDelay = param.source().toInt();
-            console->println(timeDelay);
+            console.println(timeDelay);
             const auto time = millis();
             delay(timeDelay);
             const auto timeEnd = millis() - time;
-            console->print(F("Actual timer: "));
-            console->println(timeEnd);
+            console.print(F("Actual timer: "));
+            console.println(timeEnd);
         }
 };
 ///--------------------------------------------------------------------------------------
@@ -108,6 +111,8 @@ ATerminal terminal;
 Terminal::TProviderServer<ATerminal, Terminal::ASecurityFree>   providerServer(terminal);
 Terminal::TProviderSerial<ATerminal, Terminal::ASecurityLogin>  providerSerial(terminal);
 
+///--------------------------------------------------------------------------------------
+
 
 
 
@@ -129,9 +134,7 @@ void setup()
     providerSerial.setup();
     providerServer.setup();
 
-    
-
-    pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(CONTROLLINO_D0, OUTPUT);
 }
 ///--------------------------------------------------------------------------------------
 
@@ -155,6 +158,9 @@ void loop()
         providerSerial.update();
     }
 
-    
+    //обработка нажатия кнопок
+
+    //обработка выводов
+    //relay
     
 }

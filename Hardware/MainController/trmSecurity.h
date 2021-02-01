@@ -55,7 +55,7 @@ namespace Terminal
     {
         public:
 
-            EAuthentication process(Stream *stream) { return allow; };
+            EAuthentication process(Stream &stream) { return allow; };
     };
     ///--------------------------------------------------------------------------------------
 
@@ -76,7 +76,7 @@ namespace Terminal
     {
         public:
 
-            EAuthentication process(Stream *stream);
+            EAuthentication process(Stream &stream);
 
         private:
 

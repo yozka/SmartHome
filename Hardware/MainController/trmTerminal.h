@@ -23,32 +23,6 @@ namespace Terminal
 
 
 
-     ///=====================================================================================
-	///
-	/// Список команд, содержит в себе одну комануд и список следующих
-	/// 
-	/// 
-	///--------------------------------------------------------------------------------------
-    template<class T, class... TT>
-    struct TCommands
-    {
-        using next = TCommands<TT...>; //следующая команда
-        static bool execute(const String &commandName, const AParameters &param, Stream *stream)
-        {
-            if (commandName.equalsIgnoreCase(T::name()))
-            {
-                T cmd;
-                cmd.execute(param, stream);
-                return true;
-            }
-            return next::execute(commandName, param, stream);
-        };
-    };
-	///--------------------------------------------------------------------------------------
-
-
-
-
 
      ///=====================================================================================
 	///
@@ -56,20 +30,27 @@ namespace Terminal
 	/// 
 	/// 
 	///--------------------------------------------------------------------------------------
-    template<class T>
-    struct TCommands<T>
+    template<class... TT>
+    struct TCommands
     {
-        static bool execute(const String &commandName, const AParameters &param, Stream *stream)
+        
+        template<class T>
+        static bool executeCommand(const String &commandName, const AParameters &param, Stream &stream)
         {
             if (commandName.equalsIgnoreCase(T::name()))
             {
-                T cmd;
-                cmd.execute(param, stream);
+                T::execute(param, stream);
                 return true;
             }
             return false;
         };
-    };
+        
+        static bool execute(const String &commandName, const AParameters &param, Stream &stream)
+        {
+            return ((executeCommand<TT>(commandName, param, stream)) || ... );
+        };
+        
+     };
 	///--------------------------------------------------------------------------------------
 
 
@@ -88,19 +69,19 @@ namespace Terminal
         public:
 
             //проверка, поток подключен к термиралу или нет
-            bool isConnected(const Stream *stream = nullptr) const 
+            bool isConnected(const Stream &stream) const 
             {
-                return (stream == nullptr) ? mStream != nullptr : stream == mStream;
+                return &stream == mStream;
             }
 
             //подключение потока к терминалу
-            void connect(Stream *stream)
+            void connect(Stream &stream)
             {
                 if (mStream)
                 {
                     disconnect();
                 }
-                mStream = stream;
+                mStream = &stream;
                 mStream->println(F("Connected OK"));
                 commandInput();
             }
@@ -170,7 +151,7 @@ namespace Terminal
                 mCommandLine = "";
 
                 //выполняем команду
-                if (!TCommands::execute(name, param, mStream) && mStream)
+                if (!TCommands::execute(name, param, *mStream) && mStream)
                 {
                     mStream->print(F(">>> Not found command: \""));
                     mStream->print(name);
