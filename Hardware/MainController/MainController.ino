@@ -14,6 +14,8 @@
 #include "trmProviderServer.h"
 #include "trmProviderSerial.h"
 
+#include "cmdHelp.h"
+
 #include "sysTimer.h"
 ///--------------------------------------------------------------------------------------
 
@@ -116,6 +118,7 @@ class TestCommandD
 
 //описаник команд
 using ACommands = Terminal::TCommands<
+                                        Command::ACommandHelp,
                                         TestCommandA, 
                                         TestCommandB, 
                                         TestCommandC,

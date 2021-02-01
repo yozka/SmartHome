@@ -32,45 +32,23 @@ namespace Terminal
 	/// 
 	///--------------------------------------------------------------------------------------
     template<class... TT>
-    class TCommands
+    struct TCommands
     {
-        public:
-
-            static bool execute(const String &commandName, const AParameters &param, Stream &stream)
+        template<class T>
+        static bool executeCommand(const String &commandName, const AParameters &param, Stream &stream)
+        {
+            if (commandName.equalsIgnoreCase(T::name()))
             {
-                return ((executeCommand<TT>(commandName, param, stream)) || ... );
-            };
+                T::execute(param, stream);
+                return true;
+            }
+            return false;
+        };
 
-            static void help(Stream &stream)
-            {
-                (helpCommand<TT>(stream), ...);
-            };
-
-        private:
-
-            template<class T>
-            static bool executeCommand(const String &commandName, const AParameters &param, Stream &stream)
-            {
-                if (commandName.equalsIgnoreCase(T::name()))
-                {
-                    T::execute(param, stream);
-                    return true;
-                }
-                return false;
-            };
-
-            template<class T>
-            static void helpCommand(Stream &stream)
-            {
-                String name = T::name();
-                name.toUpperCase();
-                for (int i = name.length(); i < Settings::helpMargin; i++)
-                {
-                    name += SPACE;
-                }
-                stream.print(name);
-                T::help(stream);
-            };
+        static bool execute(const String &commandName, const AParameters &param, Stream &stream)
+        {
+            return ((executeCommand<TT>(commandName, param, stream)) || ... );
+        };
 
      };
 	///--------------------------------------------------------------------------------------
@@ -172,13 +150,6 @@ namespace Terminal
                 AParameters param(index < 0 ? "" : mCommandLine.substring(index + 1));
                 mCommandLine = "";
 
-                if (name.equalsIgnoreCase(F("help")))
-                {
-                    //выполнили команду help
-                    help(param);
-                    commandInput();
-                    return;
-                }
                 //выполняем команду
                 if (!TCommands::execute(name, param, *mStream) && mStream)
                 {
@@ -214,16 +185,6 @@ namespace Terminal
                 mCommandLine = "";
             }
 
-            //проверим и выполняем команду помощи
-            void help(const AParameters &param)
-            {
-                if (mStream)
-                {
-                    mStream->println(F("For information about a specific command, type HELP <command name>"));
-                    TCommands::help(*mStream);
-                }
-            }
- 
     };/// TTerminal
 
 }
