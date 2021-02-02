@@ -1,10 +1,25 @@
 #include "cmdHelp.h"
-
+#include "commonTerminal.h"
 
 using namespace Command;
 
 
 void ACommandHelp::execute(const Terminal::AParameters &param, Stream &console)
 {
-    console.println(F("Heeeelpp!"));
+    console.println(F("For information about a specific command, type HELP <command name>"));
+
+  
+    const auto iterator = [&console]<class T>(const T &cmd)
+    {
+        String name = cmd.name();
+        name.toUpperCase();
+        for (int i = name.length(); i < Settings::helpMargin; i++)
+        {
+            name += SPACE;
+        }
+        console.print(name);
+        cmd.help(console);
+    };
+    Common::ACommands::call(iterator);
+
 }
