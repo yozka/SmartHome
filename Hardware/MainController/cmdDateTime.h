@@ -30,12 +30,30 @@ namespace Command
             static String name() { return F("date");}
             static void execute(const Terminal::AParameters &param, Stream &console);
             static void help(Stream &console);
-    
-
     };
     ///--------------------------------------------------------------------------------------
 
 
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// Команда настройки времени на контроллере
+    /// 
+    /// 
+    /// 
+    ///--------------------------------------------------------------------------------------
+    class ACommandTime
+    {
+        public:
+
+            static String name() { return F("time");}
+            static void execute(const Terminal::AParameters &param, Stream &console);
+            static void help(Stream &console);
+    };
+    ///--------------------------------------------------------------------------------------
 
 
 

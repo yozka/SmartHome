@@ -7,8 +7,8 @@
 
 #include "cmdHelp.h"
 #include "cmdEthernet.h"
-#include "cmdDate.h"
-#include "cmdTime.h"
+#include "cmdDateTime.h"
+
 
 namespace Common
 {
