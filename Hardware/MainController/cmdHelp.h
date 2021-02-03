@@ -35,7 +35,7 @@ namespace Command
     {
         public:
 
-            static String name() { return F("help");}
+            static String name() { return F("Help");}
             static void execute(const Terminal::AParameters &param, Stream &console);
             static void help(Stream &console)
             {

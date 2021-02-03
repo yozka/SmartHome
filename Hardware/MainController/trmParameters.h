@@ -22,6 +22,9 @@ namespace Terminal
          
             String source() const; //Возвратить все данные которые есть
             
+            bool isEmpty() const; //Проверка что параметры отсутствуют
+
+            int conv2d(const int index) const; //взять два символа и переделать их в число
         private:
 
             String mData;

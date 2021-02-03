@@ -7,6 +7,8 @@
 
 #include "cmdHelp.h"
 #include "cmdEthernet.h"
+#include "cmdDate.h"
+#include "cmdTime.h"
 
 namespace Common
 {
@@ -28,6 +30,8 @@ namespace Common
     //описаник команд
     using ACommands = Terminal::TCommands<
                                             Command::ACommandHelp,
+                                            Command::ACommandDate,
+                                            Command::ACommandTime,
                                             Command::TestCommandA, 
                                             Command::TestCommandB, 
                                             Command::TestCommandC,
