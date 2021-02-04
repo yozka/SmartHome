@@ -1,7 +1,5 @@
 #pragma once
-#include <Arduino.h>
 #include <Controllino.h>
-
 #include "trmParameters.h"
 
 
@@ -56,20 +54,6 @@ namespace Command
     ///--------------------------------------------------------------------------------------
     class TestCommandA
     {
-        public:
-            static String name() { return F("test");}
-            static void help(Stream &console)
-            {
-                console.println(F("This is the test part of the program"));
-            }
-            static void execute(const Terminal::AParameters &param, Stream &console)
-            {
-                console.println(F("TEST!"));
-            }
-    };
-
-    class TestCommandB
-    {
 
         public:
             static String name() { return F("led");}
@@ -98,23 +82,7 @@ namespace Command
     };
 
 
-    class TestCommandC
-    {
-
-        public:
-            static String name() { return F("exit");}
-            static void help(Stream &console) 
-            {
-                console.println(F("Test exit"));
-            }
-            static void execute(const Terminal::AParameters &param, Stream &console)
-            {
-                console.println(F("need exit.."));
-            }
-    };
-
-
-    class TestCommandD
+    class TestCommandB
     {
 
         public:

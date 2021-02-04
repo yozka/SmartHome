@@ -12,6 +12,11 @@ void ACommandHelp::execute(const Terminal::AParameters &param, Stream &console)
     const auto iterator = [&console]<class T>(const T &cmd)
     {
         String name = cmd.name();
+        if (name == ACommandHelp::name())
+        {
+            //справку о самого себе не показываем
+            return;
+        }
         name.toUpperCase();
         for (int i = name.length(); i < Settings::helpMargin; i++)
         {

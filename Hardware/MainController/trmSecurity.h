@@ -81,7 +81,7 @@ namespace Terminal
         private:
 
             //текущее состояние ввода аккаунта
-            enum EStatus
+            enum EStatus : unsigned char
             {
                 ready,          //готов к вводу данных
                 inputLogin,     //ввод логина

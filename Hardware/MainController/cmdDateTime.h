@@ -1,7 +1,4 @@
 #pragma once
-#include <Arduino.h>
-#include <Controllino.h>
-
 #include "trmParameters.h"
 
 

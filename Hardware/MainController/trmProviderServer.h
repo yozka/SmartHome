@@ -1,5 +1,5 @@
 #pragma once
-#include <Ethernet.h>
+#include "Network.h"
 
 
 namespace Terminal
@@ -7,14 +7,6 @@ namespace Terminal
     ///--------------------------------------------------------------------------------------
 
 
-
-
-    ///--------------------------------------------------------------------------------------
-    namespace Settings
-    {
-        constexpr uint16_t port = 23; //порт подключения к устройству
-    }
-    ///--------------------------------------------------------------------------------------
 
 
 
@@ -43,12 +35,13 @@ namespace Terminal
             //настрйка соеденения
             void setup()
             {
-                mServer.begin();
+                
             }
 
             //обновление и подключение к сетевому интерфейсу
             void update()
             {
+                /*
                 if ( auto client = mServer.available(); client == true && !mTerminal.isConnected(client) && client.available())
                 {
                     //есть данные, но нет соеденение с терминалом
@@ -65,13 +58,13 @@ namespace Terminal
 
                     }
                 }
+                */
             }
 
 
         private:
 
             TTerminal &mTerminal;
-            EthernetServer mServer = EthernetServer(Settings::port);
             TSecurity mSecurity;
     };
 

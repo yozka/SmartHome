@@ -4,12 +4,12 @@
 */
 #include <Arduino.h>
 #include <Controllino.h>
-#include <SPI.h>
-#include <Ethernet.h>
+
 
 
 #include "sysTimer.h"
 #include "commonTerminal.h"
+#include "Network.h"
 ///--------------------------------------------------------------------------------------
 
 
@@ -33,18 +33,8 @@ void setup()
     Controllino_RTC_init();
 
 
-    // the media access control (ethernet hardware) address for the shield:
-    byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };  
-    //the IP address for the shield:
-    byte ip[] = { 10, 0, 0, 177 };    
-    // the router's gateway address:
-    byte gateway[] = { 10, 0, 0, 1 };
-    // the subnet:
-    byte subnet[] = { 255, 255, 0, 0 };
 
-    Ethernet.begin(mac, ip, gateway, subnet);
-
-
+    Network::ethernet.setup();
     Common::providerServer.setup();
     Common::providerSerial.setup();
     

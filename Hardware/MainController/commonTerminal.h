@@ -32,10 +32,9 @@ namespace Common
                                             Command::ACommandHelp,
                                             Command::ACommandDate,
                                             Command::ACommandTime,
+                                            Command::ACommandIPConfig,
                                             Command::TestCommandA, 
-                                            Command::TestCommandB, 
-                                            Command::TestCommandC,
-                                            Command::TestCommandD>;
+                                            Command::TestCommandB>;
 
 
 

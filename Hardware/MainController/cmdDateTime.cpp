@@ -1,5 +1,6 @@
 #include "cmdDateTime.h"
-#include "commonTerminal.h"
+#include <Controllino.h>
+
 
 using namespace Command;
 ///--------------------------------------------------------------------------------------
@@ -30,8 +31,8 @@ void ACommandDate::execute(const Terminal::AParameters &param, Stream &console)
     {
         //установим текущую дату
         bool error = true;
- 	    unsigned char day, weekday, month, year, hour, minute, second = 0;
-	    if (Controllino_ReadTimeDate(&day, &weekday, &month, &year, &hour, &minute, &second) >= 0)
+        unsigned char day, weekday, month, year, hour, minute, second = 0;
+        if (Controllino_ReadTimeDate(&day, &weekday, &month, &year, &hour, &minute, &second) >= 0)
         {
             day     = param.conv2d(0);
             month   = param.conv2d(3);
@@ -103,8 +104,8 @@ void ACommandTime::execute(const Terminal::AParameters &param, Stream &console)
     {
         //установим екущее время
         bool error = true;
- 	    unsigned char day, weekday, month, year, hour, minute, second = 0;
-	    if (Controllino_ReadTimeDate(&day, &weekday, &month, &year, &hour, &minute, &second) >= 0)
+        unsigned char day, weekday, month, year, hour, minute, second = 0;
+        if (Controllino_ReadTimeDate(&day, &weekday, &month, &year, &hour, &minute, &second) >= 0)
         {
             hour    = param.conv2d(0);
             minute  = param.conv2d(3);
