@@ -4,10 +4,13 @@
 using namespace Command;
 
 
-void ACommandHelp::execute(const Terminal::AParameters &param, Stream &console)
+void ACommandHelp::execute(const Terminal::AParameters &param, Stream *console)
 {
-    console.println(F("For information about a specific command, type HELP <command name>"));
-
+    console->println(F("For information about a specific command, type HELP <command name>"));
+    console->print(F("Date frimware: "));
+    console->print(F(__DATE__ ));
+    console->print(' ');
+    console->println(F(__TIME__ ));
   
     const auto iterator = [&console]<class T>(const T &cmd)
     {
@@ -22,7 +25,7 @@ void ACommandHelp::execute(const Terminal::AParameters &param, Stream &console)
         {
             name += SPACE;
         }
-        console.print(name);
+        console->print(name);
         cmd.help(console);
     };
     Common::ACommands::call(iterator);

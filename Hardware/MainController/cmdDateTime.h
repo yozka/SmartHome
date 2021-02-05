@@ -25,8 +25,8 @@ namespace Command
         public:
 
             static String name() { return F("date");}
-            static void execute(const Terminal::AParameters &param, Stream &console);
-            static void help(Stream &console);
+            static void execute(const Terminal::AParameters &param, Stream *console);
+            static void help(Stream *console);
     };
     ///--------------------------------------------------------------------------------------
 
@@ -47,8 +47,8 @@ namespace Command
         public:
 
             static String name() { return F("time");}
-            static void execute(const Terminal::AParameters &param, Stream &console);
-            static void help(Stream &console);
+            static void execute(const Terminal::AParameters &param, Stream *console);
+            static void help(Stream *console);
     };
     ///--------------------------------------------------------------------------------------
 

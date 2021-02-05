@@ -34,9 +34,9 @@ namespace Terminal
     struct TCommands
     {
         template<class T>
-        static bool executeCommand(const String &commandName, const AParameters &param, Stream &stream)
+        static bool executeCommand(const String &commandName, const AParameters &param, Stream *stream)
         {
-            if (commandName.equalsIgnoreCase(T::name()))
+            if (stream && commandName.equalsIgnoreCase(T::name()))
             {
                 T::execute(param, stream);
                 return true;
@@ -44,9 +44,9 @@ namespace Terminal
             return false;
         };
 
-        static bool execute(const String &commandName, const AParameters &param, Stream &stream)
+        static bool execute(const String &commandName, const AParameters &param, Stream *stream)
         {
-            return ((executeCommand<TT>(commandName, param, stream)) || ... );
+            return stream && ((executeCommand<TT>(commandName, param, stream)) || ... );
         };
 
 
@@ -75,19 +75,19 @@ namespace Terminal
         public:
 
             //проверка, поток подключен к термиралу или нет
-            bool isConnected(const Stream &stream) const 
+            bool isConnected(const Stream *stream) const 
             {
-                return &stream == mStream;
+                return stream == mStream;
             }
 
             //подключение потока к терминалу
-            void connect(Stream &stream)
+            void connect(Stream *stream)
             {
                 if (mStream)
                 {
                     disconnect();
                 }
-                mStream = &stream;
+                mStream = stream;
                 mStream->println(F("Connected OK"));
                 commandInput();
             }
@@ -157,7 +157,7 @@ namespace Terminal
                 mCommandLine = "";
 
                 //выполняем команду
-                if (!TCommands::execute(name, param, *mStream) && mStream)
+                if (!TCommands::execute(name, param, mStream) && mStream)
                 {
                     mStream->print(F(">>> Not found command: \""));
                     mStream->print(name);

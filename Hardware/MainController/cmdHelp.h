@@ -34,10 +34,10 @@ namespace Command
         public:
 
             static String name() { return F("Help");}
-            static void execute(const Terminal::AParameters &param, Stream &console);
-            static void help(Stream &console)
+            static void execute(const Terminal::AParameters &param, Stream *console);
+            static void help(Stream *console)
             {
-                console.println(F("-------------"));
+                console->println(F("-------------"));
             }
 
     };
@@ -57,26 +57,26 @@ namespace Command
 
         public:
             static String name() { return F("led");}
-            static void help(Stream &console)
+            static void help(Stream *console)
             {
-                console.println(F("Turn on turn off control the LED"));
+                console->println(F("Turn on turn off control the LED"));
             }
-            static void execute(const Terminal::AParameters &param, Stream &console)
+            static void execute(const Terminal::AParameters &param, Stream *console)
             {
                 if (param.source().equalsIgnoreCase(F("on")))
                 {
                     digitalWrite(CONTROLLINO_D0, HIGH);
-                    console.println(F("Led on"));
+                    console->println(F("Led on"));
                 } 
                 else
                 if (param.source().equalsIgnoreCase(F("off")))
                 {
                     digitalWrite(CONTROLLINO_D0, LOW);
-                    console.println(F("Led off"));
+                    console->println(F("Led off"));
                 }
                 else
                 {
-                    console.println(F("led on|off"));
+                    console->println(F("led on|off"));
                 }
             }
     };
@@ -87,20 +87,20 @@ namespace Command
 
         public:
             static String name() { return F("timer");}
-            static void help(Stream &console)
+            static void help(Stream *console)
             {
-                console.println(F("Checking timer operation"));
+                console->println(F("Checking timer operation"));
             }
-            static void execute(const Terminal::AParameters &param, Stream &console)
+            static void execute(const Terminal::AParameters &param, Stream *console)
             {
-                console.print(F("Start time test: "));
+                console->print(F("Start time test: "));
                 const int timeDelay = param.source().toInt();
-                console.println(timeDelay);
+                console->println(timeDelay);
                 const auto time = millis();
                 delay(timeDelay);
                 const auto timeEnd = millis() - time;
-                console.print(F("Actual timer: "));
-                console.println(timeEnd);
+                console->print(F("Actual timer: "));
+                console->println(timeEnd);
             }
     };
     ///--------------------------------------------------------------------------------------

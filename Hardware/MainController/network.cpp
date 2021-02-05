@@ -46,7 +46,7 @@ String Network::AEthernet::MACAddress() const
 {
     String mac;
     byte macBuffer[6];  // create a buffer to hold the MAC address
-    Ethernet.MACAddress(macBuffer); // fill the buffer
+    Ethernet.MACAddress(macBuffer); 
     for (byte octet = 0; octet < 6; octet++) 
     {
         mac += arrayToHex(macBuffer + octet, 1);

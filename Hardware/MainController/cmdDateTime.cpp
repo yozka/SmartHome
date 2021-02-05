@@ -18,14 +18,14 @@ using namespace Command;
 /// 
 /// 
 ///--------------------------------------------------------------------------------------
- void ACommandDate::help(Stream &console)
+ void ACommandDate::help(Stream *console)
  {
-      console.println(F("The command displays the current date in the format DAY.MONTH.YEAR"));
+      console->println(F("The command displays the current date in the format DAY.MONTH.YEAR"));
  }
 
 
 
-void ACommandDate::execute(const Terminal::AParameters &param, Stream &console)
+void ACommandDate::execute(const Terminal::AParameters &param, Stream *console)
 {
     if (!param.isEmpty())
     {
@@ -42,7 +42,7 @@ void ACommandDate::execute(const Terminal::AParameters &param, Stream &console)
 
         if (error)
         {
-            console.println(F("Invalid date specified"));
+            console->println(F("Invalid date specified"));
         }
     }
     
@@ -53,26 +53,26 @@ void ACommandDate::execute(const Terminal::AParameters &param, Stream &console)
     {
         if (value < 10)
         {
-            console.print('0');
+            console->print('0');
         }
-        console.print(value);
+        console->print(value);
     };
 
     unsigned char day, month, year = 0;
 	if (Controllino_ReadTimeDate(&day, nullptr, &month, &year, nullptr, nullptr, nullptr) >= 0)
 	{
         //выведем текущую дату
-        console.print(F("Current data [dd.mm.yy]: "));
+        console->print(F("Current data [dd.mm.yy]: "));
         print(day);
-        console.print('.');
+        console->print('.');
         print(month);
-        console.print('.');
+        console->print('.');
         print(year);
-        console.println();
+        console->println();
     }
     else
     {
-        console.println(F("RTC chip was error"));
+        console->println(F("RTC chip was error"));
     }
 }
 ///--------------------------------------------------------------------------------------
@@ -91,14 +91,14 @@ void ACommandDate::execute(const Terminal::AParameters &param, Stream &console)
 /// 
 /// 
 ///--------------------------------------------------------------------------------------
- void ACommandTime::help(Stream &console)
+ void ACommandTime::help(Stream *console)
  {
-      console.println(F("The command displays the current time"));
+      console->println(F("The command displays the current time"));
  }
 
 
 
-void ACommandTime::execute(const Terminal::AParameters &param, Stream &console)
+void ACommandTime::execute(const Terminal::AParameters &param, Stream *console)
 {
     if (!param.isEmpty())
     {
@@ -115,7 +115,7 @@ void ACommandTime::execute(const Terminal::AParameters &param, Stream &console)
 
         if (error)
         {
-            console.println(F("Invalid time specified"));
+            console->println(F("Invalid time specified"));
         }
     }
     
@@ -126,25 +126,25 @@ void ACommandTime::execute(const Terminal::AParameters &param, Stream &console)
     {
         if (value < 10)
         {
-            console.print('0');
+            console->print('0');
         }
-        console.print(value);
+        console->print(value);
     };
 
     unsigned char hour, minute, second = 0;
 	if (Controllino_ReadTimeDate(nullptr, nullptr, nullptr, nullptr, &hour, &minute, &second) >= 0)
 	{
         //выведем текущее время
-        console.print(F("Current time: "));
+        console->print(F("Current time: "));
         print(hour);
-        console.print(':');
+        console->print(':');
         print(minute);
-        console.print(':');
+        console->print(':');
         print(second);
-        console.println();
+        console->println();
     }
     else
     {
-        console.println(F("RTC chip was error"));
+        console->println(F("RTC chip was error"));
     }
 }
