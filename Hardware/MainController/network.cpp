@@ -5,7 +5,7 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
-
+//ArduinoMqttClient by Arduino Version 0.1.5 INSTALLED
 
 namespace Network
 {
@@ -109,6 +109,82 @@ String Network::AEthernet::dnsServerIP() const
 bool Network::AEthernet::link() const
 {
     return Ethernet.linkStatus() == LinkON;
+}
+
+
+
+//установка макадреса
+bool Network::AEthernet::setMACAddress(const String &mac)
+{
+    if (mac.length() != 17)
+    {
+        return false;
+    }
+
+    byte macBuffer[6];
+    for (int i = 0; i < 6; i++)
+    {
+        const int idx = i * 3;
+        macBuffer[i] = hexToDec(mac.substring(idx, idx + 2));
+    }
+    Ethernet.setMACAddress(macBuffer); 
+    return true;
+}
+
+
+
+ //установка локлаьного адреса
+bool Network::AEthernet::setLocalIP(const String &address)
+{
+    IPAddress ip;
+    if (ip.fromString(address))
+    {
+        Ethernet.setLocalIP(ip);
+        return true;
+    }
+    return false;
+}
+
+
+
+//Установка маски подсети
+bool Network::AEthernet::setSubnetMask(const String &mask)
+{
+    IPAddress ip;
+    if (ip.fromString(mask))
+    {
+        Ethernet.setSubnetMask(ip);
+        return true;
+    }
+    return false;
+}
+
+
+
+//установка шлюза сервера
+bool Network::AEthernet::setGatewayIP(const String &address)
+{
+    IPAddress ip;
+    if (ip.fromString(address))
+    {
+        Ethernet.setGatewayIP(ip);
+        return true;
+    }
+    return false;
+}
+
+
+
+//установка альтернативного DNS
+bool Network::AEthernet::setDnsServerIP(const String &address)
+{
+    IPAddress ip;
+    if (ip.fromString(address))
+    {
+        Ethernet.setDnsServerIP(ip);
+        return true;
+    }
+    return false;
 }
 
 

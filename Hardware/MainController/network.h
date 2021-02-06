@@ -36,6 +36,7 @@ namespace Network
 
         public:
 
+            bool link() const; //есть или нет соеденение 
 
             String MACAddress() const;
             String localIP() const;
@@ -43,7 +44,11 @@ namespace Network
             String gatewayIP() const;
             String dnsServerIP() const;
 
-            bool link() const; //есть или нет соеденение 
+            bool setMACAddress  (const String &mac); //установка макадреса
+            bool setLocalIP     (const String &address); //установка локлаьного адреса
+            bool setSubnetMask  (const String &mask); //Установка маски подсети
+            bool setGatewayIP   (const String &address); //установка шлюза сервера
+            bool setDnsServerIP (const String &address); //установка альтернативного DNS
 
         public:
 

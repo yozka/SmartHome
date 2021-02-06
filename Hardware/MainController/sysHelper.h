@@ -12,3 +12,4 @@ constexpr char SPACE       = ' ';
 
 
 String arrayToHex(const char array[], const int len);
+unsigned int hexToDec(const String &hexString);

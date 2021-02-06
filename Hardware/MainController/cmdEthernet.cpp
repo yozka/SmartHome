@@ -34,15 +34,54 @@ void ACommandIPConfig::execute(const Terminal::AParameters &param, Stream *conso
           return;
      }
 
-     const auto data = param.source();
-     if (data.indexOf('?') >= 0)
+     if (param.isKey('?'))
      {
           configHelp(console);
           return;
      }
 
+     bool error = false; 
 
+     //Мак адрес
+     if (const String data = param.queryValue(F("mac")); data.length() > 0)
+     {
+          error |= !Network::ethernet.setMACAddress(data);
+          console->print(F("MAC: ")); console->println(Network::ethernet.MACAddress());
+     }
    
+     //айпиадрес
+     if (const String data = param.queryValue(F("ip")); data.length() > 0)
+     {
+          error |= !Network::ethernet.setLocalIP(data);
+          console->print(F("IPv4: ")); console->println(Network::ethernet.localIP());
+     }
+
+     //маска подсети
+     if (const String data = param.queryValue(F("mask")); data.length() > 0)
+     {
+          error |= !Network::ethernet.setSubnetMask(data);
+          console->print(F("Subnet mask: ")); console->println(Network::ethernet.subnetMask());
+     }
+
+     //основной шлюз сервера
+     if (const String data = param.queryValue(F("gateway")); data.length() > 0)
+     {
+          error |= !Network::ethernet.setGatewayIP(data);
+          console->print(F("Gateway: ")); console->println(Network::ethernet.gatewayIP());
+     }
+
+     //днс сервер
+     if (const String data = param.queryValue(F("dns")); data.length() > 0)
+     {
+          error |= !Network::ethernet.setDnsServerIP(data);
+          console->print(F("DNS server: ")); console->println(Network::ethernet.dnsServerIP());
+     }
+
+     //Ошибка конфигурации
+     if (error)
+     {
+          console->println(F("Config parametrs ERROR"));
+     }
 }
 ///--------------------------------------------------------------------------------------
 
@@ -72,3 +111,5 @@ void ACommandIPConfig::configHelp(Stream *console)
      console->print(F("ipconfig gateway "));  console->println(Network::ethernet.gatewayIP());
      console->print(F("ipconfig dns "));      console->println(Network::ethernet.dnsServerIP());
 }
+
+
