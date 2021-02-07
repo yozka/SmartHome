@@ -22,6 +22,12 @@ void ASecurityLogin::reset()
 //процесс аутентификации
 ASecurity::EAuthentication ASecurityLogin::process(Stream *stream)
 {
+    if (stream->available() == 0)
+    {
+        //здесь нужно отлсеживать времяпростоя, если слишком долго коннектились, то отрубить
+        return processing;
+    }
+
     switch (mStatus)
     {
         case ready          : return cmd_ready(stream);

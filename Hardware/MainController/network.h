@@ -53,7 +53,10 @@ namespace Network
         public:
 
 
-            Stream& terminalAvailable(); //возваритим подключенного терминал клиента
+            //сетевые данные для терминала
+            Stream* terminalGuestAvailable(); //возваритим подключенного терминал клиента
+            void terminalGuestConnect( Stream *guest ); //подключим гостя в систему
+            void terminalGuestDisconnect( Stream *guest); //отключаем готстя
     };
     ///--------------------------------------------------------------------------------------
 

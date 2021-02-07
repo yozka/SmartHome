@@ -39,7 +39,7 @@ namespace Terminal
             //подключение порта к терминалу
             void update()
             {
-                if (!mTerminal.isConnected(&Serial) && Serial.available())
+                if (!mTerminal.isConnected(&Serial))
                 {
                     //есть данные, но нет соеденение с терминалом
                     switch (mSecurity.process(&Serial))

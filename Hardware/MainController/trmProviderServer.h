@@ -41,24 +41,33 @@ namespace Terminal
             //обновление и подключение к сетевому интерфейсу
             void update()
             {
-                /*
-                if ( auto client = mServer.available(); client == true && !mTerminal.isConnected(client) && client.available())
+                
+                if ( auto   guest = Network::ethernet.terminalGuestAvailable(); 
+                            guest && !mTerminal.isConnected(guest))
                 {
                     //есть данные, но нет соеденение с терминалом
-                    switch (mSecurity.process(client))
+                    switch (mSecurity.process(guest))
                     {
-                        case TSecurity::allow      : mTerminal.connect(client); break; //доступ разрешен
                         case TSecurity::processing : break; //идет процесс аутентификации
+
+                        case TSecurity::allow: 
+                        {
+                            //доступ разрешен
+                            mTerminal.connect(guest); 
+                            Network::ethernet.terminalGuestConnect(guest);
+                            break; 
+                        }
+
                         case TSecurity::deny:
                         {
                             //отсутствует доступ
-                            client.stop();
+                            Network::ethernet.terminalGuestDisconnect(guest);
                             break; 
                         }  
 
                     }
                 }
-                */
+
             }
 
 
