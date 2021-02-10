@@ -9,14 +9,6 @@ namespace Terminal
 
 
 
-    ///--------------------------------------------------------------------------------------
-    namespace Settings
-    {
-        constexpr int lengthAuth = 10; //максимальное количество символов системе аккаунта
-    }
-    ///--------------------------------------------------------------------------------------
-
-
 
 
 
@@ -75,6 +67,7 @@ namespace Terminal
             public ASecurity
     {
         public:
+            ASecurityLogin(const bool echo = true);
 
             EAuthentication process(Stream *stream);
 
@@ -84,7 +77,9 @@ namespace Terminal
             enum EStatus : unsigned char
             {
                 ready,          //готов к вводу данных
+                readyLogin,     ///готовность в воду логина. удаление специсимволов
                 inputLogin,     //ввод логина
+                readyPasswd,    //ггтовность ввода пароля
                 inputPasswd     //ввод пароля
             };
 
@@ -92,15 +87,17 @@ namespace Terminal
             Stream* mSession    = { nullptr };  //поток который начал аутентификацию
             String  mLogin;                     //вводные данные имя пользователя
             String  mPasswd;                    //пароль
+            bool    mEcho       = { true };     //дублирование ввода в обратный поток
 
         private:
 
             EAuthentication cmd_ready       (Stream *stream);
+            EAuthentication cmd_readyLogin  (Stream *stream);
             EAuthentication cmd_inputLogin  (Stream *stream);
+            EAuthentication cmd_readyPasswd (Stream *stream);
             EAuthentication cmd_inputPasswd (Stream *stream);
 
-            EAuthentication completedLogin  (Stream *stream); //Выполнен вод имя пользователя
-            EAuthentication completedPasswd (Stream *stream); //выполнен ввод пароля
+            EAuthentication completed       (Stream *stream); //выполнен ввод пароля
 
             void reset(); //сброс всего состояния
 

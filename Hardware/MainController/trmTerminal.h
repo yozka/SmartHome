@@ -74,6 +74,12 @@ namespace Terminal
     {
         public:
 
+            //проверка, соеденение
+            bool isConnected(const int handle) const 
+            {
+                return handle == mConnectHandle;
+            }
+
             //проверка, поток подключен к термиралу или нет
             bool isConnected(const Stream *stream) const 
             {
@@ -81,16 +87,22 @@ namespace Terminal
             }
 
             //подключение потока к терминалу
-            void connect(Stream *stream)
+            int connect(Stream *stream, const bool echo)
             {
                 if (mStream)
                 {
                     disconnect();
                 }
                 mStream = stream;
+                mEcho = echo;
                 mStream->println(F("Connected OK"));
                 commandInput();
+
+                mConnectHandle++;
+                return mConnectHandle;
             }
+
+
 
             //отключение от терминала
             void disconnect()
@@ -98,16 +110,26 @@ namespace Terminal
                 if (mStream)
                 {
                     mStream->println(F("Disconnected..."));
-                    mStream = nullptr;
                 }
+                reset();
+            }
+
+
+
+            //полное отключение от всего
+            void reset()
+            {
+                mStream = nullptr;
                 mCommandLine = "";
             }
+
+
 
             //обновление терминала, чтение данных из потока 
             //и формировние команд
             void update()
             {
-                if (mStream && mStream->available())
+                if (mStream && mStream->available() > 0)
                 {
                     const char data = mStream->read();
                     switch (data)
@@ -121,7 +143,10 @@ namespace Terminal
                         if (mCommandLine.length() < Settings::lengthCommand)
                         {
                             mCommandLine += data;
-                            mStream->write(data);
+                            if (mEcho)
+                            {
+                                mStream->write(data);
+                            }
                         }
                         break;
                     }
@@ -132,23 +157,33 @@ namespace Terminal
 
         private:
 
-            Stream *mStream = { nullptr };
-            String mCommandLine;
+            int     mConnectHandle  = { 0 }; //соеденение
+            bool    mEcho           = { true }; //дублирование ввода
+            Stream* mStream         = { nullptr };
+            String  mCommandLine;
 
         private:
 
             //выполнить команду
             void execute()
             {
+                if (mEcho)
+                {
+                    mStream->println();
+                }
+
                 //получаем команду
-                mStream->println();
                 mCommandLine.trim();
                 if (mCommandLine.length() == 0)
                 {
                     //команды нет
-                    commandInput();
+                    if (mEcho)
+                    {
+                        commandInput();
+                    }
                     return;
                 }
+
                 const int index = mCommandLine.indexOf(SPACE);
                 const String name = (index < 0) ? mCommandLine : mCommandLine.substring(0, index);
 
@@ -171,12 +206,15 @@ namespace Terminal
             void backspace()
             {
                 const auto len = mCommandLine.length();
-                if (mStream && len > 0)
+                if (len > 0)
                 {
-                    mStream->write(BS);
-                    mStream->write(SPACE);
-                    mStream->write(BS);
                     mCommandLine.remove(len - 1);
+                    if (mStream && mEcho)
+                    {
+                        mStream->write(BS);
+                        mStream->write(SPACE);
+                        mStream->write(BS);
+                    }
                 }
             }
 

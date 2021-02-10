@@ -1,5 +1,6 @@
-#include "Network.h"
+#include "netSystem.h"
 #include "sysHelper.h"
+#include "configuration.h"
 
 
 #include <SPI.h>
@@ -18,9 +19,9 @@ namespace Network
     ///----------------------------------------------------------------------------------
     namespace Terminal
     {
-        EthernetServer server   = EthernetServer(Network::Settings::port); //сам сервер
-        EthernetClient client   = EthernetClient(MAX_SOCK_NUM); //активный клиент который подключен
-        EthernetClient guest    = EthernetClient(MAX_SOCK_NUM); //готсь в режиме подключения
+        EthernetServer server = EthernetServer(Configuration::Network::Terminal::port); //сам сервер
+        EthernetClient client; //активный клиент который подключен
+        EthernetClient guest; //готсь в режиме подключения
     }
 }
 ///--------------------------------------------------------------------------------------
@@ -40,17 +41,22 @@ namespace Network
     ///--------------------------------------------------------------------------------------
     void Network::AEthernet::setup()
     {
+        /*
+        byte mac[];{Configuration::Network::mac};
+        byte dns[]{Configuration::Network::dns};
+        byte ip[]{Configuration::Network::ip};
+        byte gateway[]{Configuration::Network::gateway};
+        byte subnet[]{Configuration::Network::subnet};*/
 
-        byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };  
-        byte dns[] = { 8, 8, 8, 8 };    
-        byte ip[] = { 192, 168, 1, 160 };    
-        byte gateway[] = { 192, 168, 1, 1 };
-        byte subnet[] = { 255, 255, 0, 0 };
-
+        byte mac[]        = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };  
+        byte dns[]        = { 192, 168, 0, 1 };    
+        byte ip[]         = { 192, 168, 0, 160 };    
+        byte gateway[]    = { 192, 168, 0, 1 };
+        byte subnet[]     = { 255, 255, 255, 0 };
 
         Ethernet.begin(mac, ip, dns, gateway, subnet);
 
-        Network::Terminal::server = EthernetServer(33);
+        Network::Terminal::server.begin();
     }
 
 
@@ -123,7 +129,21 @@ namespace Network
     //есть или нет соеденение 
     bool Network::AEthernet::link() const
     {
-        return Ethernet.linkStatus() == LinkON;
+        /*
+          if (Ethernet.hardwareStatus() == EthernetNoHardware) {
+            Serial.println("Ethernet shield was not found.");
+        }
+        else if (Ethernet.hardwareStatus() == EthernetW5100) {
+            Serial.println("W5100 Ethernet controller detected.");
+        }
+        else if (Ethernet.hardwareStatus() == EthernetW5200) {
+            Serial.println("W5200 Ethernet controller detected.");
+        }
+        else if (Ethernet.hardwareStatus() == EthernetW5500) {
+            Serial.println("W5500 Ethernet controller detected.");
+        }
+        */
+        return Ethernet.linkStatus() == EthernetLinkStatus::Unknown;
     }
 
 
@@ -217,28 +237,24 @@ namespace Network
     /// возваритим подключенного терминал клиента
     /// 
     ///--------------------------------------------------------------------------------------
-    Stream* Network::AEthernet::terminalGuestAvailable()
+    Stream* Network::AEthernet::terminalGuestAccept()
     {
-        auto local = Network::Terminal::server.available();
-        if (!local)
+        auto local = Network::Terminal::server.accept();
+        if (Network::Terminal::guest.connected())
         {
-            //отсутствует какоелибо соеденение
-            return nullptr;
+            //гость подключен, все отсальные подключение разрывать
+            local.stop();
+            return &Network::Terminal::guest;
         }
 
-        if (!Network::Terminal::guest)
+        if (local)
         {
-            //пришло новое седенение
+            //есть новое подключение
             Network::Terminal::guest = local;
-        }
-        else
-        if (Network::Terminal::guest != local)
-        {
-            //занят доступ
-            return nullptr;
+            return &Network::Terminal::guest;
         }
 
-        return &Network::Terminal::guest;
+        return nullptr;
     }
     ///--------------------------------------------------------------------------------------
 
@@ -251,14 +267,11 @@ namespace Network
     /// подключим гостя в систему
     /// 
     ///--------------------------------------------------------------------------------------
-    void Network::AEthernet::terminalGuestConnect( Stream *guest )
+    void Network::AEthernet::terminalGuestConnect()
     {
-         if (&Network::Terminal::guest == guest)
-         {
-             Network::Terminal::client.stop();
-             Network::Terminal::client = Network::Terminal::guest;
-             Network::Terminal::guest = {};
-         }
+        terminalClientDisconnect();
+        Network::Terminal::client = Network::Terminal::guest;
+        Network::Terminal::guest = {};
     }
     ///--------------------------------------------------------------------------------------
 
@@ -271,12 +284,45 @@ namespace Network
     /// отключаем готстя
     /// 
     ///--------------------------------------------------------------------------------------
-    void Network::AEthernet::terminalGuestDisconnect( Stream *guest )
+    void Network::AEthernet::terminalGuestDisconnect()
     {
-        if (&Network::Terminal::guest == guest)
-        {
-            Network::Terminal::guest.stop();
-            Network::Terminal::guest = {};
-        }
+        Network::Terminal::guest.stop();
+        Network::Terminal::guest = {};
     }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// получим подключенного клиента
+    /// 
+    ///--------------------------------------------------------------------------------------
+    Stream* Network::AEthernet::terminalClient()
+    {
+        if (Network::Terminal::client.connected())
+        {
+            return &Network::Terminal::client;
+        }
+        return nullptr;
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// отключим клиента полностью
+    /// 
+    ///--------------------------------------------------------------------------------------
+    void Network::AEthernet::terminalClientDisconnect()
+    {
+        Network::Terminal::client.stop();
+    }
+    ///--------------------------------------------------------------------------------------
+
+
 

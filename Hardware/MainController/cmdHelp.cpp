@@ -1,5 +1,6 @@
 #include "cmdHelp.h"
 #include "commonTerminal.h"
+#include "configuration.h"
 
 using namespace Command;
 
@@ -21,7 +22,7 @@ void ACommandHelp::execute(const Terminal::AParameters &param, Stream *console)
             return;
         }
         name.toUpperCase();
-        for (int i = name.length(); i < Settings::helpMargin; i++)
+        for (int i = name.length(); i < Configuration::Command::Help::margin; i++)
         {
             name += SPACE;
         }

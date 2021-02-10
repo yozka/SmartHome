@@ -1,5 +1,5 @@
 #pragma once
-#include <Controllino.h>
+#include <Arduino.h>
 #include "trmParameters.h"
 
 
@@ -7,14 +7,6 @@ namespace Command
 {
     ///--------------------------------------------------------------------------------------
 
-
-
-    ///--------------------------------------------------------------------------------------
-    namespace Settings
-    {
-        constexpr int helpMargin = 12; //отступ команды
-    }
-    ///--------------------------------------------------------------------------------------
 
 
 
@@ -65,13 +57,13 @@ namespace Command
             {
                 if (param.source().equalsIgnoreCase(F("on")))
                 {
-                    digitalWrite(CONTROLLINO_D0, HIGH);
+                    //digitalWrite(CONTROLLINO_D0, HIGH);
                     console->println(F("Led on"));
                 } 
                 else
                 if (param.source().equalsIgnoreCase(F("off")))
                 {
-                    digitalWrite(CONTROLLINO_D0, LOW);
+                    //digitalWrite(CONTROLLINO_D0, LOW);
                     console->println(F("Led off"));
                 }
                 else

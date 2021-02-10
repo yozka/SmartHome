@@ -39,12 +39,12 @@ namespace Terminal
             //подключение порта к терминалу
             void update()
             {
-                if (!mTerminal.isConnected(&Serial))
+                if (Serial.available() > 0 && !mTerminal.isConnected(&Serial))
                 {
                     //есть данные, но нет соеденение с терминалом
                     switch (mSecurity.process(&Serial))
                     {
-                        case TSecurity::allow      : mTerminal.connect(&Serial); break; //доступ разрешен
+                        case TSecurity::allow      : mTerminal.connect(&Serial, true); break; //доступ разрешен
                         case TSecurity::deny       : break; //отсутствует доступ
                         case TSecurity::processing : break; //идет процесс аутентификации
                     }

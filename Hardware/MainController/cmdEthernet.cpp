@@ -1,5 +1,5 @@
 #include "cmdEthernet.h"
-#include "network.h"
+#include "netSystem.h"
 
 
 

@@ -2,7 +2,7 @@
 
 
 
-String arrayToHex(const char array[], const int len)
+String arrayToHex(const byte array[], const int len)
 {
     String buffer;
     buffer.reserve(len * 2);

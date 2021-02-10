@@ -8,8 +8,8 @@
 
 
 #include "sysTimer.h"
+#include "netSystem.h"
 #include "commonTerminal.h"
-#include "Network.h"
 ///--------------------------------------------------------------------------------------
 
 
@@ -67,5 +67,6 @@ void loop()
 
     //обработка выводов
     //relay
+    
     
 }

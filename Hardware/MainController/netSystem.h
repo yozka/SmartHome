@@ -8,14 +8,6 @@ namespace Network
 
 
 
-    ///--------------------------------------------------------------------------------------
-    namespace Settings
-    {
-        constexpr uint16_t port = 23; //порт подключения к устройству
-    }
-    ///--------------------------------------------------------------------------------------
-
-
 
 
 
@@ -54,9 +46,12 @@ namespace Network
 
 
             //сетевые данные для терминала
-            Stream* terminalGuestAvailable(); //возваритим подключенного терминал клиента
-            void terminalGuestConnect( Stream *guest ); //подключим гостя в систему
-            void terminalGuestDisconnect( Stream *guest); //отключаем готстя
+            Stream* terminalGuestAccept(); //возваритим подключенного терминал клиента
+            void terminalGuestConnect(); //подключим гостя в систему как клиента
+            void terminalGuestDisconnect(); //отключаем готстя
+
+            Stream* terminalClient();//получим подключенного клиента
+            void terminalClientDisconnect();//отключим клиента полностью
     };
     ///--------------------------------------------------------------------------------------
 

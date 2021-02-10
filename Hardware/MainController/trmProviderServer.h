@@ -1,6 +1,7 @@
 #pragma once
-#include "Network.h"
-
+#include <Arduino.h>
+#include "netSystem.h"
+#include "configuration.h"
 
 namespace Terminal
 {
@@ -26,7 +27,8 @@ namespace Terminal
 
             TProviderServer(TTerminal &terminal)
                 :
-                    mTerminal(terminal)
+                    mTerminal(terminal),
+                    mSecurity(false)
             {
 
             }
@@ -42,7 +44,7 @@ namespace Terminal
             void update()
             {
                 
-                if ( auto   guest = Network::ethernet.terminalGuestAvailable(); 
+                if ( auto   guest = Network::ethernet.terminalGuestAccept(); 
                             guest && !mTerminal.isConnected(guest))
                 {
                     //есть данные, но нет соеденение с терминалом
@@ -53,28 +55,67 @@ namespace Terminal
                         case TSecurity::allow: 
                         {
                             //доступ разрешен
-                            mTerminal.connect(guest); 
-                            Network::ethernet.terminalGuestConnect(guest);
+                            mTerminal.disconnect(); 
+                            Network::ethernet.terminalGuestConnect();
+                            mConnectHandle = mTerminal.connect(Network::ethernet.terminalClient(), false);
+                            mTimeSession = millis() + Configuration::Network::Terminal::timeSession;
                             break; 
                         }
 
                         case TSecurity::deny:
                         {
                             //отсутствует доступ
-                            Network::ethernet.terminalGuestDisconnect(guest);
+                            Network::ethernet.terminalGuestDisconnect();
                             break; 
                         }  
 
                     }
                 }
 
+                statusDisconnected();
             }
 
+        private:
+
+            void statusDisconnected()
+            {
+                if (mConnectHandle == 0)
+                {
+                    return;
+                }
+                
+                const bool terminalConnected    = mTerminal.isConnected(mConnectHandle);
+                const bool timeSession          = mTimeSession > millis();
+
+                if (auto client = Network::ethernet.terminalClient(); 
+                                client &&                           //клиент живой
+                                mTerminal.isConnected(client) &&    //подключен к терминалу корректно
+                                terminalConnected &&                //хенд сессии корректен
+                                timeSession)                        //время сессии невышла
+                {
+                    //клиент живой, под терминалом работает хорошо
+                    return;
+                }
+                
+                //проблема, клиент мертвый отключам все
+                Network::ethernet.terminalClientDisconnect();
+                if (terminalConnected)
+                {
+                    //клиент полностью отрублен, он не отвечает
+                    mTerminal.reset();
+                }
+
+                mConnectHandle = 0;
+                mTimeSession = 0;
+            }
 
         private:
 
             TTerminal &mTerminal;
             TSecurity mSecurity;
+            int mConnectHandle = { 0 }; //коннекция
+            unsigned long mTimeSession = { 0 }; //время соеденения
+        
     };
 
 }
