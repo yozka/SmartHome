@@ -1,8 +1,8 @@
-#include "commonTerminal.h"
+#include "cmdTerminal.h"
 
 
 
-namespace Common
+namespace Terminal
 {
     ATerminal terminal;
     AProviderServer  providerServer(terminal);

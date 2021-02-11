@@ -49,5 +49,6 @@ int availableMemory()
 void ACommandMemory::execute(const Terminal::AParameters &param, Stream *console)
 {
     console->print(F("Available memory: "));
-    console->println(availableMemory());
+    console->print(availableMemory());
+    console->println(F(" byte"));
 }

@@ -1,5 +1,5 @@
 #include "cmdHelp.h"
-#include "commonTerminal.h"
+#include "cmdTerminal.h"
 #include "configuration.h"
 
 using namespace Command;
@@ -12,7 +12,7 @@ void ACommandHelp::execute(const Terminal::AParameters &param, Stream *console)
     console->print(F(__DATE__ ));
     console->print(' ');
     console->println(F(__TIME__ ));
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 60; i++)
     {
         console->write('-');
     }
@@ -34,6 +34,6 @@ void ACommandHelp::execute(const Terminal::AParameters &param, Stream *console)
         console->print(name);
         cmd.help(console);
     };
-    Common::ACommands::call(iterator);
+    Terminal::ACommands::call(iterator);
 
 }

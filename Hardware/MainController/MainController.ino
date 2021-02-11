@@ -9,7 +9,7 @@
 #include "configuration.h"
 #include "sysTimer.h"
 #include "netSystem.h"
-#include "commonTerminal.h"
+#include "cmdTerminal.h"
 ///--------------------------------------------------------------------------------------
 
 
@@ -33,8 +33,8 @@ void setup()
     Board::setup();
 
     Network::ethernet.setup();
-    Common::providerServer.setup();
-    Common::providerSerial.setup();
+    Terminal::providerServer.setup();
+    Terminal::providerSerial.setup();
     
 }
 ///--------------------------------------------------------------------------------------
@@ -54,9 +54,9 @@ void loop()
     if (slowTimer.active())
     {
         //обработка терминала
-        Common::terminal.update();
-        Common::providerServer.update();
-        Common::providerSerial.update();
+        Terminal::terminal.update();
+        Terminal::providerServer.update();
+        Terminal::providerSerial.update();
     }
 
     //обработка нажатия кнопок

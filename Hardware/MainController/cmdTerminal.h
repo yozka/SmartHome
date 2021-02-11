@@ -11,7 +11,7 @@
 #include "cmdMemory.h"
 
 
-namespace Common
+namespace Terminal
 {
     ///--------------------------------------------------------------------------------------
 
