@@ -44,8 +44,7 @@ namespace Terminal
             void update()
             {
                 
-                if ( auto   guest = Network::ethernet.terminalGuestAccept(); 
-                            guest && !mTerminal.isConnected(guest))
+                if ( auto guest = Network::ethernet.terminalGuestAccept(); guest != nullptr)
                 {
                     //есть данные, но нет соеденение с терминалом
                     switch (mSecurity.process(guest))

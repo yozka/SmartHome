@@ -87,7 +87,8 @@ namespace Terminal
             Stream* mSession    = { nullptr };  //поток который начал аутентификацию
             String  mLogin;                     //вводные данные имя пользователя
             String  mPasswd;                    //пароль
-            bool    mEcho       = { true };     //дублирование ввода в обратный поток
+            bool    mEcho               = { true };     //дублирование ввода в обратный поток
+            unsigned long mTimeSession  = { 0 }; //время ввода логин пароля
 
         private:
 
@@ -100,7 +101,7 @@ namespace Terminal
             EAuthentication completed       (Stream *stream); //выполнен ввод пароля
 
             void reset(); //сброс всего состояния
-
+            bool isOutTimeSession() const; //вышло время 
             bool isAuthentication() const; //проверка, логин пароль введен правельно или нет
 
     };

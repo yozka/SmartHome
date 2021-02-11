@@ -28,7 +28,7 @@ namespace Network
 
         public:
 
-            bool link() const; //есть или нет соеденение 
+            String chipset() const; //возвратим тип чипа
 
             String MACAddress() const;
             String localIP() const;

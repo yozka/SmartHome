@@ -23,14 +23,28 @@ void ASecurityLogin::reset()
     mSession = nullptr;
     mLogin = "";
     mPasswd = "";
+    mTimeSession = 0;
 }
 
+
+
+//вышло время 
+bool ASecurityLogin::isOutTimeSession() const
+{
+    return mTimeSession != 0 && mTimeSession < millis();
+}
 
 
 
 //процесс аутентификации
 ASecurity::EAuthentication ASecurityLogin::process(Stream *stream)
 {
+    if (isOutTimeSession())
+    {
+        reset();
+        return deny;
+    }
+
     switch (mStatus)
     {
         case ready          : return cmd_ready(stream);
@@ -59,6 +73,7 @@ ASecurity::EAuthentication ASecurityLogin::cmd_ready(Stream *stream)
     mSession = stream;
     mLogin = "";
     mPasswd = "";
+    mTimeSession = millis() + Configuration::Network::Terminal::timeLoginSession;
     return processing;
 }
 

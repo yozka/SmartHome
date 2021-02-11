@@ -3,10 +3,10 @@
     по возможности не использовать STL
 */
 #include <Arduino.h>
-#include <Controllino.h>
 
 
 
+#include "configuration.h"
 #include "sysTimer.h"
 #include "netSystem.h"
 #include "commonTerminal.h"
@@ -30,16 +30,12 @@ Time::ASlowTimer slowTimer; //медленный таймер
 ///--------------------------------------------------------------------------------------
 void setup() 
 {
-    Controllino_RTC_init();
-
-
+    Board::setup();
 
     Network::ethernet.setup();
     Common::providerServer.setup();
     Common::providerSerial.setup();
     
-
-    pinMode(CONTROLLINO_D0, OUTPUT);
 }
 ///--------------------------------------------------------------------------------------
 

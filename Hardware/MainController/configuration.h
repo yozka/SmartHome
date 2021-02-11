@@ -1,5 +1,10 @@
 #pragma once
 #include <Arduino.h>
+
+
+#include "configuration_board001.h"
+
+
 namespace Configuration
 {
 
@@ -10,6 +15,7 @@ namespace Configuration
         {
             constexpr uint16_t          port = 23; //порт подключения к устройству
             constexpr unsigned long     timeSession = 1800000; //время длины сессии с терминалом 30min
+            constexpr unsigned long     timeLoginSession = 600000; //время длины сессии вода пароля 1 минута
         }
 
     /*

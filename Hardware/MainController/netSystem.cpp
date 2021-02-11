@@ -127,24 +127,21 @@ namespace Network
 
 
     //есть или нет соеденение 
-    bool Network::AEthernet::link() const
-    {
-        /*
-          if (Ethernet.hardwareStatus() == EthernetNoHardware) {
-            Serial.println("Ethernet shield was not found.");
+    String Network::AEthernet::chipset() const
+    {/*
+        switch (Ethernet.hardwareStatus())
+        {
+            case EthernetNoHardware :   return F("none");
+            case EthernetW5100 :        return F("W5100");
+            case EthernetW5200 :        return F("W5200");
+            case EthernetW5500 :        return F("W5500");
+        default:
+            break;            
         }
-        else if (Ethernet.hardwareStatus() == EthernetW5100) {
-            Serial.println("W5100 Ethernet controller detected.");
-        }
-        else if (Ethernet.hardwareStatus() == EthernetW5200) {
-            Serial.println("W5200 Ethernet controller detected.");
-        }
-        else if (Ethernet.hardwareStatus() == EthernetW5500) {
-            Serial.println("W5500 Ethernet controller detected.");
-        }
-        */
-        return Ethernet.linkStatus() == EthernetLinkStatus::Unknown;
+        return F("Unknown");*/
+        return {};
     }
+
 
 
 

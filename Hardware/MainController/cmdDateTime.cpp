@@ -1,5 +1,5 @@
 #include "cmdDateTime.h"
-#include <Controllino.h>
+#include "configuration.h"
 
 
 using namespace Command;
@@ -30,17 +30,17 @@ void ACommandDate::execute(const Terminal::AParameters &param, Stream *console)
     if (!param.isEmpty())
     {
         //установим текущую дату
-        bool error = true;
+        bool ok = false;
         unsigned char day, weekday, month, year, hour, minute, second = 0;
-        if (Controllino_ReadTimeDate(&day, &weekday, &month, &year, &hour, &minute, &second) >= 0)
+        if (Board::DateTime::read(&day, &weekday, &month, &year, &hour, &minute, &second))
         {
             day     = param.conv2d(0);
             month   = param.conv2d(3);
             year    = param.conv2d(6);
-            error   = Controllino_SetTimeDate(day, weekday, month, year, hour, minute, second) < 0;
+            ok      = Board::DateTime::write(day, weekday, month, year, hour, minute, second);
         }
 
-        if (error)
+        if (!ok)
         {
             console->println(F("Invalid date specified"));
         }
@@ -59,7 +59,7 @@ void ACommandDate::execute(const Terminal::AParameters &param, Stream *console)
     };
 
     unsigned char day, month, year = 0;
-	if (Controllino_ReadTimeDate(&day, nullptr, &month, &year, nullptr, nullptr, nullptr) >= 0)
+	if (Board::DateTime::read(&day, nullptr, &month, &year, nullptr, nullptr, nullptr))
 	{
         //выведем текущую дату
         console->print(F("Current data [dd.mm.yy]: "));
@@ -74,6 +74,7 @@ void ACommandDate::execute(const Terminal::AParameters &param, Stream *console)
     {
         console->println(F("RTC chip was error"));
     }
+    
 }
 ///--------------------------------------------------------------------------------------
 
@@ -95,6 +96,8 @@ void ACommandDate::execute(const Terminal::AParameters &param, Stream *console)
  {
       console->println(F("The command displays the current time"));
  }
+
+
 
 
 

@@ -92,7 +92,7 @@ void ACommandIPConfig::execute(const Terminal::AParameters &param, Stream *conso
 //вывести информацию об сетевом соеденении
 void ACommandIPConfig::info(Stream *console)
 {
-     console->print(F("   Ethernet: ")); console->println(Network::ethernet.link() ? F("Link ON") : F("Link OFF"));
+     console->print(F("    Chipset: ")); console->println(Network::ethernet.chipset());
      console->print(F("        MAC: ")); console->println(Network::ethernet.MACAddress());
      console->print(F("       IPv4: ")); console->println(Network::ethernet.localIP());
      console->print(F("Subnet mask: ")); console->println(Network::ethernet.subnetMask());
