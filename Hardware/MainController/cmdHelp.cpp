@@ -12,6 +12,11 @@ void ACommandHelp::execute(const Terminal::AParameters &param, Stream *console)
     console->print(F(__DATE__ ));
     console->print(' ');
     console->println(F(__TIME__ ));
+    for (int i = 0; i < 20; i++)
+    {
+        console->write('-');
+    }
+    console->println();
   
     const auto iterator = [&console]<class T>(const T &cmd)
     {

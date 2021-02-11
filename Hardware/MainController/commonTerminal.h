@@ -8,6 +8,7 @@
 #include "cmdHelp.h"
 #include "cmdEthernet.h"
 #include "cmdDateTime.h"
+#include "cmdMemory.h"
 
 
 namespace Common
@@ -33,8 +34,7 @@ namespace Common
                                             Command::ACommandDate,
                                             Command::ACommandTime,
                                             Command::ACommandIPConfig,
-                                            Command::TestCommandA, 
-                                            Command::TestCommandB>;
+                                            Command::ACommandMemory >;
 
 
 

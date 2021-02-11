@@ -128,7 +128,7 @@ namespace Network
 
     //есть или нет соеденение 
     String Network::AEthernet::chipset() const
-    {/*
+    {
         switch (Ethernet.hardwareStatus())
         {
             case EthernetNoHardware :   return F("none");
@@ -138,8 +138,7 @@ namespace Network
         default:
             break;            
         }
-        return F("Unknown");*/
-        return {};
+        return F("Unknown");
     }
 
 

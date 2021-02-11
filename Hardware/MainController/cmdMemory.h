@@ -16,22 +16,18 @@ namespace Command
 
      ///=====================================================================================
     ///
-    /// КОманда терминала, выводит помощь по всем командам
+    /// КОманда терминала, выводит информацию по памяти
     /// 
     /// 
     /// 
     ///--------------------------------------------------------------------------------------
-    class ACommandHelp
+    class ACommandMemory
     {
         public:
 
-            static String name() { return F("Help");}
+            static String name() { return F("Memory");}
             static void execute(const Terminal::AParameters &param, Stream *console);
-            static void help(Stream *console)
-            {
-                
-            }
-
+            static void help(Stream *console);
     };
     ///--------------------------------------------------------------------------------------
 
