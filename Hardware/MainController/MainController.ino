@@ -10,6 +10,7 @@
 #include "sysTimer.h"
 #include "netSystem.h"
 #include "cmdTerminal.h"
+#include "board.h"
 ///--------------------------------------------------------------------------------------
 
 
@@ -31,6 +32,7 @@ Time::ASlowTimer slowTimer; //медленный таймер
 void setup() 
 {
     Board::setup();
+    Board::relays.setup();  
 
     Network::ethernet.setup();
     Terminal::providerServer.setup();
@@ -64,5 +66,6 @@ void loop()
     //обработка выводов
     //relay
     
-    
+    //Board::meta::Relay10::name();
+    //Board::ARelay2::info::name();
 }

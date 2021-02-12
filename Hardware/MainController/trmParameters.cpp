@@ -69,3 +69,33 @@ bool AParameters::isKey(const char key) const
     }
     return mData.substring(idxBegin, idxEnd);
  }
+
+
+
+//извлечь параметр по его порядковому номеру индексу (0 - первыое слово, 1 - второе, итд.)
+String AParameters::queryIndex(const int index) const
+{
+    int indexCurrent = 0; //номер текущей строки
+    String dataPart; //найденный параметр
+    bool space = true;
+    const int length = mData.length();
+    for(int i = 0; i < length; i++)
+    {
+        const auto data = mData[i];
+        if(data == ' ' && space) 
+        {
+            indexCurrent++;
+            space = false;
+        } 
+        else if(indexCurrent == index) 
+        {
+            dataPart.concat(data);
+            space = true;
+        } 
+        else if(indexCurrent > index) 
+        {
+            break;
+        }
+    }
+    return dataPart;
+}

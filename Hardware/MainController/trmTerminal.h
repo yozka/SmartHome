@@ -30,7 +30,7 @@ namespace Terminal
     /// 
     /// 
     ///--------------------------------------------------------------------------------------
-    template<class... TT>
+    template<class ...TT>
     struct TCommands
     {
         template<class T>
@@ -142,7 +142,7 @@ namespace Terminal
                     default:
                         if (mCommandLine.length() < Settings::lengthCommand)
                         {
-                            mCommandLine += data;
+                            mCommandLine.concat(data);
                             if (mEcho)
                             {
                                 mStream->write(data);

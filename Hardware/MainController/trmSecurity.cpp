@@ -138,7 +138,7 @@ ASecurity::EAuthentication ASecurityLogin::cmd_inputLogin(Stream *stream)
     {
         stream->write(data);
     }
-    mLogin += data;
+    mLogin.concat(data);
     if (mLogin.length() > Configuration::Security::lengthAuth)
     {
         //превысели допустимую длину пароля
@@ -204,7 +204,7 @@ ASecurity::EAuthentication ASecurityLogin::cmd_inputPasswd(Stream *stream)
     {
         stream->write('*');
     }
-    mPasswd += data;
+    mPasswd.concat(data);
     if (mPasswd.length() > Configuration::Security::lengthAuth)
     {
         reset();

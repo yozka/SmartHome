@@ -12,7 +12,7 @@ void ACommandHelp::execute(const Terminal::AParameters &param, Stream *console)
     console->print(F(__DATE__ ));
     console->print(' ');
     console->println(F(__TIME__ ));
-    for (int i = 0; i < 60; i++)
+    for (int i = 0; i < 70; i++)
     {
         console->write('-');
     }

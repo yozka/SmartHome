@@ -9,6 +9,7 @@
 #include "cmdEthernet.h"
 #include "cmdDateTime.h"
 #include "cmdMemory.h"
+#include "cmdRelay.h"
 
 
 namespace Terminal
@@ -31,6 +32,7 @@ namespace Terminal
     //описаник команд
     using ACommands = Terminal::TCommands<
                                             Command::ACommandHelp,
+                                            Command::ACommandRelay, 
                                             Command::ACommandDate,
                                             Command::ACommandTime,
                                             Command::ACommandIPConfig,
