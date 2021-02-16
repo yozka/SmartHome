@@ -1,6 +1,6 @@
 #include "trmSecurity.h"
-#include "sysHelper.h"
-#include "configuration.h"
+#include "sysUtils.h"
+#include "user_config.h"
 
 
 using namespace Terminal;
@@ -73,7 +73,7 @@ ASecurity::EAuthentication ASecurityLogin::cmd_ready(Stream *stream)
     mSession = stream;
     mLogin = "";
     mPasswd = "";
-    mTimeSession = millis() + Configuration::Network::Terminal::timeLoginSession;
+    mTimeSession = millis() + Config::Network::Terminal::timeLoginSession;
     return processing;
 }
 
@@ -127,7 +127,7 @@ ASecurity::EAuthentication ASecurityLogin::cmd_inputLogin(Stream *stream)
     }
 
     const char data = stream->read();
-    if (data == CR || data == LF)
+    if (data == sys::CR || data == sys::LF)
     {
         //нажали ентер, подтвердили выбора имени пользователя
         mStatus = readyPasswd;
@@ -139,7 +139,7 @@ ASecurity::EAuthentication ASecurityLogin::cmd_inputLogin(Stream *stream)
         stream->write(data);
     }
     mLogin.concat(data);
-    if (mLogin.length() > Configuration::Security::lengthAuth)
+    if (mLogin.length() > Config::Security::lengthAuth)
     {
         //превысели допустимую длину пароля
         reset();
@@ -194,7 +194,7 @@ ASecurity::EAuthentication ASecurityLogin::cmd_inputPasswd(Stream *stream)
     }
 
     const char data = stream->read();
-    if (data == CR || data == LF)
+    if (data == sys::CR || data == sys::LF)
     {
         //нажали ентер, подтвердили выбор
         return completed(stream);
@@ -205,7 +205,7 @@ ASecurity::EAuthentication ASecurityLogin::cmd_inputPasswd(Stream *stream)
         stream->write('*');
     }
     mPasswd.concat(data);
-    if (mPasswd.length() > Configuration::Security::lengthAuth)
+    if (mPasswd.length() > Config::Security::lengthAuth)
     {
         reset();
         return deny;

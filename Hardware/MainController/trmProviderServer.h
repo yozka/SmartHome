@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include "netSystem.h"
-#include "configuration.h"
+#include "user_config.h"
 
 namespace Terminal
 {
@@ -57,7 +57,7 @@ namespace Terminal
                             mTerminal.disconnect(); 
                             Network::ethernet.terminalGuestConnect();
                             mConnectHandle = mTerminal.connect(Network::ethernet.terminalClient(), false);
-                            mTimeSession = millis() + Configuration::Network::Terminal::timeSession;
+                            mTimeSession = millis() + Config::Network::Terminal::timeSession;
                             break; 
                         }
 

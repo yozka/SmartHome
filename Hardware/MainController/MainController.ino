@@ -6,9 +6,10 @@
 
 
 
-#include "configuration.h"
+#include "user_config.h"
 #include "sysTimer.h"
 #include "netSystem.h"
+#include "netMqtt.h"
 #include "cmdTerminal.h"
 #include "board.h"
 ///--------------------------------------------------------------------------------------
@@ -35,6 +36,8 @@ void setup()
     Board::relays.setup();  
 
     Network::ethernet.setup();
+    Network::mqtt.setup();
+
     Terminal::providerServer.setup();
     Terminal::providerSerial.setup();
     
@@ -60,6 +63,8 @@ void loop()
         Terminal::providerServer.update();
         Terminal::providerSerial.update();
     }
+
+    Network::mqtt.update();
 
     //обработка нажатия кнопок
 

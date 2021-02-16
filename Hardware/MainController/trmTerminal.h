@@ -1,8 +1,9 @@
 #pragma once
 
 #include <Stream.h>
-#include "sysHelper.h"
+#include "sysUtils.h"
 #include "trmParameters.h"
+#include "user_config.h"
 
 
 namespace Terminal
@@ -10,14 +11,6 @@ namespace Terminal
     ///--------------------------------------------------------------------------------------
 
 
-
-
-    ///--------------------------------------------------------------------------------------
-    namespace Settings
-    {
-        constexpr int lengthCommand = 100; //максимальное количество символов в команде
-    }
-    ///--------------------------------------------------------------------------------------
 
 
 
@@ -73,6 +66,12 @@ namespace Terminal
     class TTerminal
     {
         public:
+            
+            TTerminal()
+            {
+                mCommandLine.reserve(Config::Command::lengthCommand);
+            }
+
 
             //проверка, соеденение
             bool isConnected(const int handle) const 
@@ -134,13 +133,13 @@ namespace Terminal
                     const char data = mStream->read();
                     switch (data)
                     {
-                        case CR:
-                        case LF: execute(); break;
+                        case sys::CR:
+                        case sys::LF: execute(); break;
 
-                        case BS: backspace(); break;
+                        case sys::BS: backspace(); break;
         
                     default:
-                        if (mCommandLine.length() < Settings::lengthCommand)
+                        if (mCommandLine.length() < Config::Command::lengthCommand)
                         {
                             mCommandLine.concat(data);
                             if (mEcho)
@@ -184,7 +183,7 @@ namespace Terminal
                     return;
                 }
 
-                const int index = mCommandLine.indexOf(SPACE);
+                const int index = mCommandLine.indexOf(sys::SPACE);
                 const String name = (index < 0) ? mCommandLine : mCommandLine.substring(0, index);
 
                 //создаем параметры
@@ -211,9 +210,9 @@ namespace Terminal
                     mCommandLine.remove(len - 1);
                     if (mStream && mEcho)
                     {
-                        mStream->write(BS);
-                        mStream->write(SPACE);
-                        mStream->write(BS);
+                        mStream->write(sys::BS);
+                        mStream->write(sys::SPACE);
+                        mStream->write(sys::BS);
                     }
                 }
             }

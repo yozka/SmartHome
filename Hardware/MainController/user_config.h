@@ -2,10 +2,10 @@
 #include <Arduino.h>
 
 
-#include "configuration_board001.h"
+#include "user_board001.h"
 
 
-namespace Configuration
+namespace Config
 {
 
     ///--------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ namespace Configuration
         {
             constexpr uint16_t          port = 23; //порт подключения к устройству
             constexpr unsigned long     timeSession = 1800000; //время длины сессии с терминалом 30min
-            constexpr unsigned long     timeLoginSession = 600000; //время длины сессии вода пароля 1 минута
+            constexpr unsigned long     timeLoginSession = 60000; //время длины сессии вода пароля 1 минута
         }
 
     /*
@@ -39,9 +39,16 @@ namespace Configuration
 
 
 
+
+
+
     ///--------------------------------------------------------------------------------------
     namespace Command
     {
+
+        constexpr int lengthCommand = 100; //максимальное количество символов в команде
+
+
         namespace Help
         {
             constexpr int margin = 12; //отступ команды помощи

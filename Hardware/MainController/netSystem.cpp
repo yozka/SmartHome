@@ -1,12 +1,12 @@
 #include "netSystem.h"
-#include "sysHelper.h"
-#include "configuration.h"
+#include "sysUtils.h"
+#include "user_config.h"
 
 
 #include <SPI.h>
 #include <Ethernet.h>
 
-//ArduinoMqttClient by Arduino Version 0.1.5 INSTALLED
+
 
 
 ///--------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ namespace Network
     ///----------------------------------------------------------------------------------
     namespace Terminal
     {
-        EthernetServer server = EthernetServer(Configuration::Network::Terminal::port); //сам сервер
+        EthernetServer server = EthernetServer(Config::Network::Terminal::port); //сам сервер
         EthernetClient client; //активный клиент который подключен
         EthernetClient guest; //готсь в режиме подключения
     }
@@ -42,11 +42,11 @@ namespace Network
     void Network::AEthernet::setup()
     {
         /*
-        byte mac[];{Configuration::Network::mac};
-        byte dns[]{Configuration::Network::dns};
-        byte ip[]{Configuration::Network::ip};
-        byte gateway[]{Configuration::Network::gateway};
-        byte subnet[]{Configuration::Network::subnet};*/
+        byte mac[];{Config::Network::mac};
+        byte dns[]{Config::Network::dns};
+        byte ip[]{Config::Network::ip};
+        byte gateway[]{Config::Network::gateway};
+        byte subnet[]{Config::Network::subnet};*/
 
         byte mac[]        = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };  
         byte dns[]        = { 192, 168, 0, 1 };    
@@ -70,7 +70,7 @@ namespace Network
         Ethernet.MACAddress(macBuffer); 
         for (byte octet = 0; octet < 6; octet++) 
         {
-            mac += arrayToHex(macBuffer + octet, 1);
+            mac += sys::arrayToHex(macBuffer + octet, 1);
             if (octet < 5) 
             {
                 mac += '-';
@@ -156,7 +156,7 @@ namespace Network
         for (int i = 0; i < 6; i++)
         {
             const int idx = i * 3;
-            macBuffer[i] = hexToDec(mac.substring(idx, idx + 2));
+            macBuffer[i] = sys::hexToDec(mac.substring(idx, idx + 2));
         }
         Ethernet.setMACAddress(macBuffer); 
         return true;
