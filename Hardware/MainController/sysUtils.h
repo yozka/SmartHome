@@ -15,5 +15,4 @@ namespace sys
     String arrayToHex(const byte array[], const int len);
     unsigned int hexToDec(const String &hexString);
 
-
 }

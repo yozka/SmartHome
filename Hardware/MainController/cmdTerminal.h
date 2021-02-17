@@ -5,11 +5,13 @@
 #include "trmProviderServer.h"
 #include "trmProviderSerial.h"
 
+#include "cmdTest.h"
 #include "cmdHelp.h"
 #include "cmdEthernet.h"
 #include "cmdDateTime.h"
 #include "cmdMemory.h"
 #include "cmdRelay.h"
+
 
 
 namespace Terminal
@@ -31,6 +33,7 @@ namespace Terminal
 
     //описаник команд
     using ACommands = Terminal::TCommands<
+                                            Command::ACommandTest,
                                             Command::ACommandHelp,
                                             Command::ACommandRelay, 
                                             Command::ACommandDate,

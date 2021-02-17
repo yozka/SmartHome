@@ -76,6 +76,7 @@ namespace Network
             return;
         }
 
+        return;
         Network::Mqtt::client.setId(F("mqtt-tigraha-e7xewj"));
         Network::Mqtt::client.setUsernamePassword(F("admin"), F("123"));
 
