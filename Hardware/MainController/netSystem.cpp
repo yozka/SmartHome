@@ -1,6 +1,8 @@
 #include "netSystem.h"
 #include "sysUtils.h"
+#include "sysStorage.h"
 #include "user_config.h"
+
 
 
 #include <SPI.h>
@@ -48,9 +50,11 @@ namespace Network
         byte gateway[]{Config::Network::gateway};
         byte subnet[]{Config::Network::subnet};*/
 
+        sys::AStorage storage;
+
         byte mac[]        = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };  
-        byte dns[]        = { 192, 168, 0, 1 };    
-        byte ip[]         = { 192, 168, 0, 160 };    
+        byte dns[]        = { 192, 168, 0, 1 };
+        byte ip[]         = { 192, 168, 0, 160 };
         byte gateway[]    = { 192, 168, 0, 1 };
         byte subnet[]     = { 255, 255, 255, 0 };
 

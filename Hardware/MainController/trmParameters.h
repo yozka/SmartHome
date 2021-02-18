@@ -33,6 +33,14 @@ namespace Terminal
             bool isKey(const char key) const; //проверить есть ключь или нет
             String queryValue(const String &key) const; //извлечь параметр после ключа
             String queryIndex(const int index) const; //извлечь параметр по его порядковому номеру индексу (0 - первыое слово, 1 - второе, итд.)
+
+        public:
+    
+            const String operator[](const int index) const
+            {
+                return queryIndex(index);
+            }
+
         private:
 
             String mData;

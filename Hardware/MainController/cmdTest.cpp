@@ -1,6 +1,7 @@
 #include "cmdTest.h"
 #include "cmdTerminal.h"
 #include "sysHash.h"
+#include "sysStorage.h"
 
 using namespace Command;
 
@@ -9,6 +10,7 @@ using namespace Command;
 
 void ACommandTest::execute(const Terminal::AParameters &param, Stream *console)
 {
+    /*
     unsigned long hs1 = sys::hash_const("Test string from cashed");
     console->println(hs1);
 
@@ -29,5 +31,27 @@ void ACommandTest::execute(const Terminal::AParameters &param, Stream *console)
     console->println();
     console->print(param.source());
     console->print(' ');
-    console->println(sys::hash(param.source()));
+    console->println(sys::hash(param.source()));*/
+
+    String key = param[0];
+    String value = param[1];
+
+    if (key.length() == 0)
+    {
+        return;
+    }
+
+    sys::AStorage storage;
+    if (value.length() == 0)
+    {
+        //прочитаем параметр
+        console->print(key);
+        console->print(F(" -> "));
+        console->println(storage.readString(sys::hash(key)));
+    }
+    else
+    {
+        //сохраним параметр
+        storage.writeString(sys::hash(key), value);
+    }
 }
