@@ -1,6 +1,7 @@
 #include "netSystem.h"
 #include "sysUtils.h"
 #include "sysStorage.h"
+#include "sysHash.h"
 #include "user_config.h"
 
 
@@ -50,16 +51,21 @@ namespace Network
         byte gateway[]{Config::Network::gateway};
         byte subnet[]{Config::Network::subnet};*/
 
-        sys::AStorage storage;
-
         byte mac[]        = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };  
         byte dns[]        = { 192, 168, 0, 1 };
         byte ip[]         = { 192, 168, 0, 160 };
         byte gateway[]    = { 192, 168, 0, 1 };
         byte subnet[]     = { 255, 255, 255, 0 };
 
-        Ethernet.begin(mac, ip, dns, gateway, subnet);
+        sys::AStorage storage;
+        storage.read(sys::hash_const("mac"), mac);
+        storage.read(sys::hash_const("dns"), dns);
+        storage.read(sys::hash_const("ip"), ip);
+        storage.read(sys::hash_const("gateway"), gateway);
+        storage.read(sys::hash_const("subnet"), subnet);
 
+
+        Ethernet.begin(mac, ip, dns, gateway, subnet);
         Network::Terminal::server.begin();
     }
 

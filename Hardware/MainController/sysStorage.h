@@ -24,6 +24,7 @@ namespace sys
         using Key = unsigned long;
         public:
 
+            void dump(Stream *console) const; //вывести информацию о внутреннм состоянии памяти
   
         public:
 

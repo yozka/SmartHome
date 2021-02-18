@@ -1,6 +1,6 @@
 #include "sysStorage.h"
+#include "sysUtils.h"
 #include <avr/eeprom.h>
-#include <EEPROM.h>
 ///--------------------------------------------------------------------------------------
 
 
@@ -8,9 +8,12 @@
 using namespace sys;
 ///--------------------------------------------------------------------------------------
 
+/*
 #define DEBUG_PRINT(x) Serial.print(x)
 #define DEBUG_PRINTLN(x) Serial.println(x)
-
+*/
+#define DEBUG_PRINT(x)
+#define DEBUG_PRINTLN(x)
 
 
 
@@ -139,8 +142,7 @@ AStorage::Chunk AStorage::endChunk() const
  {
     THeader header;
     size_t adr = 0;
-    size_t src = 0;
-    while ( src < E2END )
+    for (size_t src = 0; src < E2END; )
     {
         eeprom_read_block(&header, src, sizeof(THeader));
 
@@ -192,7 +194,7 @@ AStorage::Chunk AStorage::emplaceChunk(const Key &key, const Chunk::TypeChunk ty
     DEBUG_PRINTLN(F("Write chunk"));
     THeader header;
     header.key = key;
-    header.sizeChunk = sizeChunk;
+    header.sizeChunk = chunk.sizeChunk;
     header.typeChunk = typeChunk;
     header.magic = Settings::magic;
     eeprom_update_block(&header, chunk.address, sizeof(THeader));
@@ -234,4 +236,47 @@ AStorage::Chunk AStorage::createChunk(const size_t sizeChunk)
     eeprom_update_block(&header, chunk.address + sizeChunk, sizeof(THeader));
     
     return chunk;  
+ }
+
+
+
+//вывести информацию о внутреннм состоянии памяти
+ void AStorage::dump(Stream *console) const
+ {
+    const auto print = [&console]<class T>(const T &data, const int count)
+    {
+        for (auto i = console->print(data); i < count; i++)
+        {
+            console->print(' ');
+        }
+    };
+    //
+
+    for (size_t src = 0; src < E2END; )
+    {
+        THeader header;
+        eeprom_read_block(&header, src, sizeof(THeader));
+        if (header.magic != Settings::magic)
+        {
+            //разрушена целостность данных
+            break;
+        }
+        //выведем информацию
+        // ключ, адрес чанка, размер чанка, дефрагментация, тип чанка, какие данные там находятся 
+        console->print(' '); //ключ
+        print(header.key, 10);
+        console->print('|'); //адрес чанка
+        print(src, 10);
+        console->print('|'); //размер чанка
+        print(header.sizeChunk, 5);
+        console->print('|');
+
+        
+        
+        console->println();
+        //перейдем к следующим данным
+        src += sizeof(THeader);
+        src += header.sizeChunk;
+        //
+    }
  }

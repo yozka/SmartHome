@@ -10,6 +10,7 @@
 #include "cmdEthernet.h"
 #include "cmdDateTime.h"
 #include "cmdMemory.h"
+#include "cmdStorage.h"
 #include "cmdRelay.h"
 
 
@@ -39,7 +40,8 @@ namespace Terminal
                                             Command::ACommandDate,
                                             Command::ACommandTime,
                                             Command::ACommandIPConfig,
-                                            Command::ACommandMemory >;
+                                            Command::ACommandMemory,
+                                            Command::ACommandStorage >;
 
 
 
