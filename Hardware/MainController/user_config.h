@@ -18,12 +18,8 @@ namespace Config
             constexpr unsigned long     timeLoginSession = 60000; //время длины сессии вода пароля 1 минута
         }
 
-    /*
-        constexpr byte mac[]        = { 0xAD, 0xBD, 0xBE, 0xEF, 0xFE, 0xED };  
-        constexpr byte dns[]        = { 192, 168, 0, 1 };    
-        constexpr byte ip[]         = { 192, 168, 0, 160 };    
-        constexpr byte gateway[]    = { 192, 168, 0, 1 };
-        constexpr byte subnet[]     = { 255, 255, 0, 0 };*/
+    
+
     }
     ///--------------------------------------------------------------------------------------
 

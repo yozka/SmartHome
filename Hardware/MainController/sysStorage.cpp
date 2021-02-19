@@ -34,6 +34,39 @@ struct THeader
 
 
 
+//чтение бинарных данных
+bool AStorage::readRaw(const Key &key, uint8_t *data, const size_t dataSize) const
+{
+    if (const auto chunk = findChunk(key); chunk.valid && chunk.typeChunk == Chunk::eRaw)
+    {
+        const void *adr = chunk.address + sizeof(THeader);
+        
+        size_t size = 0;
+        eeprom_read_block(&size, adr, sizeof(size_t));
+        if (size == dataSize)
+        {
+            adr += sizeof(size_t);
+            eeprom_read_block(data, adr, size);
+            return true;        
+        }
+    }
+    return false;
+}
+
+
+//запись бинарных данных
+void AStorage::writeRaw(const Key &key, const uint8_t *data, const size_t dataSize)
+{
+    const auto size =  dataSize + sizeof(size_t);
+    if (auto chunk = emplaceChunk(key, Chunk::eRaw, size); chunk.valid)
+    {
+        uint16_t adr = chunk.address + sizeof(THeader);
+        eeprom_update_block(&dataSize, adr, sizeof(size_t));
+        eeprom_update_block(data, adr + sizeof(size_t), dataSize);
+    }
+}
+
+
 
 
 
@@ -72,6 +105,47 @@ void AStorage::writeString(const Key &key, const String &value)
             eeprom_update_byte(adr++, value[i]);
         }
         eeprom_update_byte(adr, 0);
+    }
+}
+
+
+
+
+uint32_t AStorage::read_uint32(const Key &key, const uint32_t &defValue = 0) const
+{
+    return read<uint32_t>(key, Chunk::eUint32, defValue);
+}
+
+
+void AStorage::write_uint32(const Key &key, const uint32_t &value)
+{
+    write<uint32_t>(key, Chunk::eUint32, value);
+}
+
+
+
+
+template <typename T>
+T AStorage::read(const Key &key, const AStorage::Chunk::TypeChunk typeChunk, const T &defValue) const
+{
+    if (const auto chunk = findChunk(key); chunk.valid && chunk.typeChunk == typeChunk)
+    {
+        T value;
+        eeprom_read_block(&value, chunk.address + sizeof(THeader), sizeof(T));
+        return value;
+    }
+    return defValue;
+}
+
+
+
+
+template <typename T>
+void AStorage::write(const Key &key, const AStorage::Chunk::TypeChunk typeChunk, const T &value)
+{
+    if (auto chunk = emplaceChunk(key, typeChunk, sizeof(T)); chunk.valid)
+    {
+        eeprom_update_block(&value, chunk.address + sizeof(THeader), sizeof(T));
     }
 }
 
@@ -240,6 +314,21 @@ AStorage::Chunk AStorage::createChunk(const size_t sizeChunk)
 
 
 
+
+//удалить все
+void AStorage::erase()
+{
+    THeader header;
+    header.key = 0;
+    header.sizeChunk = 0;
+    header.typeChunk = Chunk::none;
+    header.magic = Settings::magic;
+    eeprom_update_block(&header, 0, sizeof(THeader));
+}
+
+
+
+
 //вывести информацию о внутреннм состоянии памяти
  void AStorage::dump(Stream *console) const
  {
@@ -280,3 +369,7 @@ AStorage::Chunk AStorage::createChunk(const size_t sizeChunk)
         //
     }
  }
+
+
+
+ 

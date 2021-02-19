@@ -1,9 +1,8 @@
 #include "netSystem.h"
 #include "sysUtils.h"
 #include "sysStorage.h"
-#include "sysHash.h"
 #include "user_config.h"
-
+#include "sysHash.h"
 
 
 #include <SPI.h>
@@ -44,26 +43,20 @@ namespace Network
     ///--------------------------------------------------------------------------------------
     void Network::AEthernet::setup()
     {
-        /*
-        byte mac[];{Config::Network::mac};
-        byte dns[]{Config::Network::dns};
-        byte ip[]{Config::Network::ip};
-        byte gateway[]{Config::Network::gateway};
-        byte subnet[]{Config::Network::subnet};*/
-
-        byte mac[]        = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };  
-        byte dns[]        = { 192, 168, 0, 1 };
-        byte ip[]         = { 192, 168, 0, 160 };
-        byte gateway[]    = { 192, 168, 0, 1 };
-        byte subnet[]     = { 255, 255, 255, 0 };
+ 
+        byte mac[]          = { 0xAD, 0xBD, 0xBE, 0xEF, 0xFE, 0xED };  
+        IPAddress dns       = { 192, 168, 0, 1 };
+        IPAddress ip        = { 192, 168, 0, 160 };
+        IPAddress gateway   = { 192, 168, 0, 1 };
+        IPAddress subnet    = { 255, 255, 255, 0 };
 
         sys::AStorage storage;
-        storage.read(sys::hash_const("mac"), mac);
-        storage.read(sys::hash_const("dns"), dns);
-        storage.read(sys::hash_const("ip"), ip);
-        storage.read(sys::hash_const("gateway"), gateway);
-        storage.read(sys::hash_const("subnet"), subnet);
 
+        storage.read(sys::hash_const("mac"), mac);
+        dns =       storage.read_uint32(sys::hash_const("dns"), dns);
+        ip =        storage.read_uint32(sys::hash_const("ip"), ip);
+        gateway =   storage.read_uint32(sys::hash_const("gateway"), gateway);
+        subnet =    storage.read_uint32(sys::hash_const("subnet"), subnet);
 
         Ethernet.begin(mac, ip, dns, gateway, subnet);
         Network::Terminal::server.begin();
@@ -168,6 +161,9 @@ namespace Network
             const int idx = i * 3;
             macBuffer[i] = sys::hexToDec(mac.substring(idx, idx + 2));
         }
+
+        sys::AStorage storage;
+        storage.write(sys::hash_const("mac"), macBuffer);
         Ethernet.setMACAddress(macBuffer); 
         return true;
     }
@@ -180,6 +176,8 @@ namespace Network
         IPAddress ip;
         if (ip.fromString(address))
         {
+            sys::AStorage storage;
+            storage.write_uint32(sys::hash_const("ip"), ip);
             Ethernet.setLocalIP(ip);
             return true;
         }
@@ -194,6 +192,8 @@ namespace Network
         IPAddress ip;
         if (ip.fromString(mask))
         {
+            sys::AStorage storage;
+            storage.write_uint32(sys::hash_const("subnet"), ip);
             Ethernet.setSubnetMask(ip);
             return true;
         }
@@ -208,6 +208,8 @@ namespace Network
         IPAddress ip;
         if (ip.fromString(address))
         {
+            sys::AStorage storage;
+            storage.write_uint32(sys::hash_const("gateway"), ip);
             Ethernet.setGatewayIP(ip);
             return true;
         }
@@ -222,6 +224,8 @@ namespace Network
         IPAddress ip;
         if (ip.fromString(address))
         {
+            sys::AStorage storage;
+            storage.write_uint32(sys::hash_const("dns"), ip);
             Ethernet.setDnsServerIP(ip);
             return true;
         }
