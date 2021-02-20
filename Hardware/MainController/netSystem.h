@@ -25,7 +25,7 @@ namespace Network
         public:
 
             void setup(); //настройка сетевого интерфейса
-
+            void restore(); //востановить настройки по умолчанию, и перезагрузить сетевое окружение
         public:
 
             String chipset() const; //возвратим тип чипа
@@ -52,6 +52,10 @@ namespace Network
 
             Stream* terminalClient();//получим подключенного клиента
             void terminalClientDisconnect();//отключим клиента полностью
+
+        private:
+            
+            void ethernetSetup(); //начальная загрузка параметров
     };
     ///--------------------------------------------------------------------------------------
 

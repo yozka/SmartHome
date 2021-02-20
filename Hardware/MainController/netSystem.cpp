@@ -43,7 +43,26 @@ namespace Network
     ///--------------------------------------------------------------------------------------
     void Network::AEthernet::setup()
     {
- 
+        ethernetSetup();
+        Network::Terminal::server.begin();
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// начальная загрузка параметров
+    /// 
+    /// 
+    /// 
+    ///--------------------------------------------------------------------------------------
+    void Network::AEthernet::ethernetSetup()
+    {
         byte mac[]          = { 0xAD, 0xBD, 0xBE, 0xEF, 0xFE, 0xED };  
         IPAddress dns       = { 192, 168, 0, 1 };
         IPAddress ip        = { 192, 168, 0, 160 };
@@ -59,7 +78,32 @@ namespace Network
         subnet =    storage.read_uint32(sys::hash_const("subnet"), subnet);
 
         Ethernet.begin(mac, ip, dns, gateway, subnet);
-        Network::Terminal::server.begin();
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// востановить настройки по умолчанию, и перезагрузить сетевое окружение
+    /// 
+    /// 
+    /// 
+    ///--------------------------------------------------------------------------------------
+    void Network::AEthernet::restore()
+    {
+        sys::AStorage storage;
+        storage.erase(sys::hash_const("mac"));
+        storage.erase(sys::hash_const("dns"));
+        storage.erase(sys::hash_const("ip"));
+        storage.erase(sys::hash_const("gateway"));
+        storage.erase(sys::hash_const("subnet"));
+
+        ethernetSetup();
     }
 
 

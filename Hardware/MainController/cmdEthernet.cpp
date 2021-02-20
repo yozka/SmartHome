@@ -40,6 +40,14 @@ void ACommandIPConfig::execute(const Terminal::AParameters &param, Stream *conso
           return;
      }
 
+     if (param.source().equalsIgnoreCase(F("restore")))
+     {
+          Network::ethernet.restore();
+          info(console);
+          return;
+     }
+
+
      bool error = false; 
 
      //Мак адрес
@@ -110,6 +118,10 @@ void ACommandIPConfig::configHelp(Stream *console)
      console->print(F("ipconfig mask "));     console->println(Network::ethernet.subnetMask());
      console->print(F("ipconfig gateway "));  console->println(Network::ethernet.gatewayIP());
      console->print(F("ipconfig dns "));      console->println(Network::ethernet.dnsServerIP());
+     
+     console->println();
+     console->println(F("Restore default settings:")); 
+     console->println(F("ipconfig restore")); 
 }
 
 

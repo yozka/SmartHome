@@ -315,6 +315,20 @@ void AStorage::erase()
 }
 
 
+//удалить данные по ключу
+void AStorage::erase(const Key &key)
+{
+    if (const auto chunk = findChunk(key); chunk.valid)
+    {
+        THeader header;
+        header.key = 0;
+        header.sizeChunk = chunk.sizeChunk;
+        header.typeChunk = Chunk::none;
+        header.magic = Settings::magic;
+        eeprom_update_block(&header, chunk.address, sizeof(THeader));
+    }
+}
+
 
 
 //вывести информацию о внутреннм состоянии памяти

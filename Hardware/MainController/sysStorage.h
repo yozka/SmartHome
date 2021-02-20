@@ -26,7 +26,7 @@ namespace sys
 
             void dump(Stream *console) const; //вывести информацию о внутреннм состоянии памяти
             void erase(); //удалить все
-
+            void erase(const Key &key); //удалить данные по ключу
         public:
 
             template <typename T>
