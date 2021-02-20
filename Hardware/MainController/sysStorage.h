@@ -77,6 +77,9 @@ namespace sys
                 Chunk() = default;
                 Chunk(const Key &key, const size_t address, const TypeChunk typeChunk, const size_t sizeChunk)
                             : valid(true), key(key), address(address), typeChunk(typeChunk), sizeChunk(sizeChunk) {};
+
+                size_t fragSize()const; //размер фрагментирования чанка
+                String typeString()const; //тип чанка ввиде строчки
             };
             //
 

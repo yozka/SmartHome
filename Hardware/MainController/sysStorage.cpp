@@ -91,15 +91,10 @@ String AStorage::readString(const Key &key, const String &defValue) const
 
 void AStorage::writeString(const Key &key, const String &value)
 {
-    DEBUG_PRINTLN(key);
-    DEBUG_PRINTLN(value);
-
     const auto length = value.length();
     if (auto chunk = emplaceChunk(key, Chunk::eString, length + 1); chunk.valid)
     {
-        DEBUG_PRINT(F("Write data string: "));
         uint16_t adr = chunk.address + sizeof(THeader);
-        DEBUG_PRINTLN(adr);
         for (int i = 0; i < length; i++)
         {
             eeprom_update_byte(adr++, value[i]);
@@ -240,12 +235,9 @@ AStorage::Chunk AStorage::endChunk() const
 //создание чанка
 AStorage::Chunk AStorage::emplaceChunk(const Key &key, const Chunk::TypeChunk typeChunk, const size_t sizeChunk)
 {
-    DEBUG_PRINTLN(F("emplace chunk"));
-
     auto chunk = findChunk(key);
     if (chunk.valid)
     {
-        DEBUG_PRINTLN(F("find chunk valid"));
         //чанк найден
         //и он маленького размера, удалим его
         if (chunk.sizeChunk < sizeChunk)
@@ -257,7 +249,6 @@ AStorage::Chunk AStorage::emplaceChunk(const Key &key, const Chunk::TypeChunk ty
 
     if (!chunk.valid)
     {
-        DEBUG_PRINTLN(F("Not old chunk"));
         chunk = findFreeChunk(sizeChunk);
         if (!chunk.valid)
         {
@@ -265,7 +256,6 @@ AStorage::Chunk AStorage::emplaceChunk(const Key &key, const Chunk::TypeChunk ty
         }
     }
 
-    DEBUG_PRINTLN(F("Write chunk"));
     THeader header;
     header.key = key;
     header.sizeChunk = chunk.sizeChunk;
@@ -296,10 +286,8 @@ void AStorage::clearChunk(const AStorage::Chunk &chunk)
 //создание чанки и чанка заглушки
 AStorage::Chunk AStorage::createChunk(const size_t sizeChunk)
 {
-    DEBUG_PRINT(F("Create chunk: "));
     auto chunk = endChunk();
     chunk.sizeChunk = sizeChunk;
-    DEBUG_PRINT(chunk.address);
 
     //запишем закрывающий последний чанк
     THeader header;
@@ -334,42 +322,91 @@ void AStorage::erase()
  {
     const auto print = [&console]<class T>(const T &data, const int count)
     {
-        for (auto i = console->print(data); i < count; i++)
+        String str(data);
+        for (int i = str.length(); i < count; i++)
         {
             console->print(' ');
         }
+        console->print(str);
     };
     //
+    
+    const auto printLine = [&console](const char s = '=')
+    {
+        for (int i = 0; i < 70; i++) console->print(s);
+        console->println();
+    };
 
-    for (size_t src = 0; src < E2END; )
+    //отрисуем заголовок
+    printLine();
+    print(F("Key"),     12); console->print('|'); 
+    print(F("Addr"),    5);  console->print('|');
+    print(F("Size"),    5);  console->print('|');
+    print(F("Frag"),    5);  console->print('|');
+    print(F("Type"),    8);  console->print('|');
+    console->println(F(" DATA"));
+    printLine();
+
+    size_t src = 0;
+    while (src < E2END)
     {
         THeader header;
         eeprom_read_block(&header, src, sizeof(THeader));
         if (header.magic != Settings::magic)
         {
-            //разрушена целостность данных
-            break;
+            break; //разрушена целостность данных
         }
-        //выведем информацию
-        // ключ, адрес чанка, размер чанка, дефрагментация, тип чанка, какие данные там находятся 
-        console->print(' '); //ключ
-        print(header.key, 10);
-        console->print('|'); //адрес чанка
-        print(src, 10);
-        console->print('|'); //размер чанка
-        print(header.sizeChunk, 5);
-        console->print('|');
-
-        
-        
-        console->println();
+        const Chunk chunk(header.key, src, header.typeChunk, header.sizeChunk);
         //перейдем к следующим данным
         src += sizeof(THeader);
         src += header.sizeChunk;
         //
+
+        //выведем информацию
+        // ключ, адрес чанка, размер чанка, дефрагментация, тип чанка, какие данные там находятся 
+        print(chunk.key, 12);           console->print('|'); 
+        print(chunk.address, 5);        console->print('|'); //адрес чанка
+        print(chunk.sizeChunk, 5);      console->print('|'); //размер чанка
+        print(chunk.fragSize(), 5);     console->print('|'); //фрагментация чанка
+        print(chunk.typeString(), 8);   console->print('|'); //тип чанка
+
+        console->println();
+
     }
+    printLine('-');
+    const size_t freeFlash = E2END - src;
+    console->print(F("Free flash memory: ")); console->print(freeFlash); console->println(F(" Bytes"));
  }
 
 
 
  
+//размер фрагментирования чанка
+size_t AStorage::Chunk::fragSize()const
+{
+    return 0;
+}
+
+//тип чанка ввиде строчки
+String AStorage::Chunk::typeString()const
+{
+    if (!valid)
+    {
+        return F("invalid");
+    }
+    if (key == 0 && typeChunk == none)
+    {
+        return F("FREE"); //свободный чанк
+    }
+
+    switch (typeChunk)
+    {
+        case none       : return F("none");
+        case eRaw       : return F("Raw");
+        case eString    : return F("String");
+        case eInt       : return F("Int");
+        case eFloat     : return F("Float");
+        case eUint32    : return F("Uint32");
+    }
+    return String(typeChunk);
+}
