@@ -1,5 +1,7 @@
 #include "trmSecurity.h"
 #include "sysUtils.h"
+#include "sysStorage.h"
+#include "sysHash.h"
 #include "user_config.h"
 
 
@@ -240,5 +242,7 @@ ASecurity::EAuthentication ASecurityLogin::completed(Stream *stream)
 //проверка, логин пароль введен правельно или нет
 bool ASecurityLogin::isAuthentication() const
 {
-    return mLogin == F("admin") && mPasswd == F("123");
+    sys::AStorage storage;
+    return mLogin  == storage.readString(sys::hash_const("login"),  F("admin"))
+        && mPasswd == storage.readString(sys::hash_const("passwd"), F("123"));
 }

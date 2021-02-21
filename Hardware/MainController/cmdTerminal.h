@@ -12,6 +12,7 @@
 #include "cmdMemory.h"
 #include "cmdStorage.h"
 #include "cmdRelay.h"
+#include "cmdPasswd.h"
 
 
 
@@ -41,7 +42,8 @@ namespace Terminal
                                             Command::ACommandTime,
                                             Command::ACommandIPConfig,
                                             Command::ACommandMemory,
-                                            Command::ACommandStorage >;
+                                            Command::ACommandStorage,
+                                            Command::ACommandPasswd >;
 
 
 

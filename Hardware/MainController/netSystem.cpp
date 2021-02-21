@@ -1,8 +1,8 @@
 #include "netSystem.h"
 #include "sysUtils.h"
 #include "sysStorage.h"
-#include "user_config.h"
 #include "sysHash.h"
+#include "user_config.h"
 
 
 #include <SPI.h>
