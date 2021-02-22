@@ -47,10 +47,14 @@ namespace sys
             bool        readRaw     (const Key &key, uint8_t *data, const size_t dataSize) const; //чтение бинарных данных
             String      readString  (const Key &key, const String &defValue = {}) const; //чтение строчки
             uint32_t    read_uint32 (const Key &key, const uint32_t &defValue = 0) const;
+            uint16_t    read_uint16 (const Key &key, const uint16_t &defValue = 0) const;
+            uint8_t     read_uint8  (const Key &key, const uint8_t &defValue = 0) const;
 
             void writeRaw       (const Key &key, const uint8_t *data, const size_t dataSize); //запись бинарных данных
             void writeString    (const Key &key, const String &value); //запись строчки
             void write_uint32   (const Key &key, const uint32_t &value); 
+            void write_uint16   (const Key &key, const uint16_t &value); 
+            void write_uint8    (const Key &key, const uint8_t &value); 
 
         private:
 
@@ -64,7 +68,9 @@ namespace sys
                     eString = 2,
                     eInt    = 3,
                     eFloat  = 4,
-                    eUint32 = 5
+                    eUint32 = 5,
+                    eUint16 = 6,
+                    eUint8  = 7
                     
                 };
 

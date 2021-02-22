@@ -142,7 +142,7 @@ ASecurity::EAuthentication ASecurityLogin::cmd_inputLogin(Stream *stream)
         stream->write(data);
     }
     mLogin.concat(data);
-    if (mLogin.length() > Config::Security::lengthAuth)
+    if (mLogin.length() > Config::Network::Terminal::lengthAuth)
     {
         //превысели допустимую длину пароля
         reset();
@@ -208,7 +208,7 @@ ASecurity::EAuthentication ASecurityLogin::cmd_inputPasswd(Stream *stream)
         stream->write('*');
     }
     mPasswd.concat(data);
-    if (mPasswd.length() > Config::Security::lengthAuth)
+    if (mPasswd.length() > Config::Network::Terminal::lengthAuth)
     {
         reset();
         return deny;
@@ -244,6 +244,8 @@ ASecurity::EAuthentication ASecurityLogin::completed(Stream *stream)
 bool ASecurityLogin::isAuthentication() const
 {
     sys::AStorage storage;
-    return mLogin  == storage.readString(sys::hash_const("login"),  F("admin"))
-        && mPasswd == storage.readString(sys::hash_const("passwd"), F("123"));
+    const auto login =  storage.readString(sys::hash_const("terminal-login"));
+    const auto passwd = storage.readString(sys::hash_const("terminal-passwd"));
+
+    return mLogin  == login && mPasswd == passwd && login.length() > 0 && passwd.length() > 0;
 }

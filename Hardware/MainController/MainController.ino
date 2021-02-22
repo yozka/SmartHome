@@ -7,7 +7,7 @@
 
 
 #include "user_config.h"
-#include "src/Network/netSystem.h"
+#include "src/Network/network.h"
 #include "src/Network/netMqtt.h"
 #include "src/Command/cmdTerminal.h"
 #include "src/Board/board.h"

@@ -1,6 +1,9 @@
 #include "netMqtt.h"
-#include "../Systems/sysUtils.h"
+
 #include "../Board/board.h"
+#include "../Systems/sysUtils.h"
+#include "../Systems/sysStorage.h"
+#include "../Systems/sysHash.h"
 #include "../../user_config.h"
 ///--------------------------------------------------------------------------------------
 
@@ -26,8 +29,8 @@ namespace Network
     ///----------------------------------------------------------------------------------
     namespace Mqtt
     {
-        EthernetClient  tcp;
-        MqttClient      client(tcp);
+        EthernetClient tcp;
+        MqttClient client(tcp);
     }
 }
 ///--------------------------------------------------------------------------------------
@@ -64,7 +67,7 @@ namespace Network
      ///=====================================================================================
     ///
     /// 
-    /// 
+    /// Обновление протокола
     /// 
     /// 
     ///--------------------------------------------------------------------------------------
@@ -76,29 +79,44 @@ namespace Network
             return;
         }
 
-        return;
-        Network::Mqtt::client.setId(F("mqtt-tigraha-e7xewj"));
-        Network::Mqtt::client.setUsernamePassword(F("admin"), F("123"));
+        //нет связи, делаем переподключение
+        const auto time = millis();
+        if (time > mTimeReconnect || mLastConnect)
+        {
+            mTimeReconnect = time + Config::Network::Mqtt::timeReconnect;
+            mLastConnect = reconnect();
+        }
+    }
+    ///--------------------------------------------------------------------------------------
 
 
-        //последнее слово о разрыве
-        String willTopic = F("arduino/will");
-        String willPayload = F("oh no!");
-        bool willRetain = true;
-        int willQos = 1;
 
-        Network::Mqtt::client.beginWill(willTopic, willPayload.length(), willRetain, willQos);
-        Network::Mqtt::client.print(willPayload);
-        Network::Mqtt::client.endWill();
-        //
 
-        String broker = F("dev.rightech.io");
-        uint16_t port = 1883;
+     ///=====================================================================================
+    ///
+    /// переподключение к серверу
+    /// 
+    /// 
+    /// 
+    ///--------------------------------------------------------------------------------------
+    bool Network::AMqtt::reconnect()
+    {
+        sys::AStorage storage;
+
+
+
+        Network::Mqtt::client.setId(storage.readString(sys::hash_const("mqtt-clientId")));
+        Network::Mqtt::client.setUsernamePassword(storage.readString(sys::hash_const("mqtt-login")),
+                                                  storage.readString(sys::hash_const("mqtt-passwd")));
+
+    
+        const String broker = storage.readString(sys::hash_const("mqtt-broker"));
+        const uint16_t port = storage.read_uint16(sys::hash_const("mqtt-port"), 1883);
         if (!Network::Mqtt::client.connect(broker.c_str(), port)) 
         {
-            Serial.print("MQTT connection failed! Error code = ");
-            Serial.println(Network::Mqtt::client.connectError());
-            return;
+            //проблема со связью
+            //соеденения нет
+            return false;
         }
 
         // subscribe to a topic
@@ -107,11 +125,9 @@ namespace Network
         int subscribeQos = 1;
         String inTopic = F("base/relay/led1");
         Network::Mqtt::client.subscribe(inTopic, subscribeQos);
+
+        return true;
     }
-    ///--------------------------------------------------------------------------------------
-
-
-
 
 
 

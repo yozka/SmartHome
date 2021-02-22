@@ -24,17 +24,20 @@ namespace Network
         public:
 
             void setup(); //настройка сетевого интерфейса
-
             void update();
-        public:
-
            
         public:
 
 
         private:
 
+            bool reconnect(); //делам переподключение
             void onMqttMessage(int messageSize); //приходящее сообщение
+
+        private:
+
+            bool mLastConnect = { false };
+            unsigned long mTimeReconnect = { 0 }; //время переподключение к серверу
 
     };
     ///--------------------------------------------------------------------------------------

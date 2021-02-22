@@ -105,18 +105,41 @@ void AStorage::writeString(const Key &key, const String &value)
 
 
 
-
+//
 uint32_t AStorage::read_uint32(const Key &key, const uint32_t &defValue = 0) const
 {
     return read<uint32_t>(key, Chunk::eUint32, defValue);
 }
-
-
 void AStorage::write_uint32(const Key &key, const uint32_t &value)
 {
     write<uint32_t>(key, Chunk::eUint32, value);
 }
+//
 
+
+//
+uint16_t AStorage::read_uint16(const Key &key, const uint16_t &defValue = 0) const
+{
+    return read<uint16_t>(key, Chunk::eUint16, defValue);
+}
+void AStorage::write_uint16(const Key &key, const uint16_t &value)
+{
+    write<uint16_t>(key, Chunk::eUint16, value);
+}
+//
+
+
+
+//
+uint8_t AStorage::read_uint8(const Key &key, const uint8_t &defValue = 0) const
+{
+    return read<uint8_t>(key, Chunk::eUint8, defValue);
+}
+void AStorage::write_uint8(const Key &key, const uint8_t &value)
+{
+    write<uint8_t>(key, Chunk::eUint8, value);
+}
+//
 
 
 
@@ -421,6 +444,8 @@ String AStorage::Chunk::typeString()const
         case eInt       : return F("Int");
         case eFloat     : return F("Float");
         case eUint32    : return F("Uint32");
+        case eUint16    : return F("Uint16");
+        case eUint8     : return F("Uint8");
     }
     return String(typeChunk);
 }

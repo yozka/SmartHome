@@ -13,6 +13,7 @@
 #include "cmdStorage.h"
 #include "cmdRelay.h"
 #include "cmdPasswd.h"
+#include "cmdMqtt.h"
 
 
 
@@ -41,6 +42,7 @@ namespace Terminal
                                             Command::ACommandDate,
                                             Command::ACommandTime,
                                             Command::ACommandIPConfig,
+                                            Command::ACommandMqtt,
                                             Command::ACommandMemory,
                                             Command::ACommandStorage,
                                             Command::ACommandPasswd >;

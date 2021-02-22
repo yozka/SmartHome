@@ -1,4 +1,4 @@
-#include "netSystem.h"
+#include "network.h"
 #include "../Systems/sysUtils.h"
 #include "../Systems/sysStorage.h"
 #include "../Systems/sysHash.h"

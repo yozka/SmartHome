@@ -13,12 +13,16 @@ namespace Config
     {
         namespace Terminal
         {
-            constexpr uint16_t          port = 23; //порт подключения к устройству
-            constexpr unsigned long     timeSession = 1800000; //время длины сессии с терминалом 30min
-            constexpr unsigned long     timeLoginSession = 60000; //время длины сессии вода пароля 1 минута
+            constexpr uint16_t          port                = 23; //порт подключения к устройству
+            constexpr unsigned long     timeSession         = 1000L * 60L * 30L;     //время длины сессии с терминалом 30min
+            constexpr unsigned long     timeLoginSession    = 1000L * 60L;  //время длины сессии вода пароля 1 минута
+            constexpr int               lengthAuth          = 10; //максимальное количество символов системе аккаунта
         }
 
-    
+        namespace Mqtt
+        {
+            constexpr int timeReconnect = 1000L * 30L; //время пересоздания соеденения 30 секунд
+        }    
 
     }
     ///--------------------------------------------------------------------------------------
@@ -29,7 +33,7 @@ namespace Config
     ///--------------------------------------------------------------------------------------
     namespace Security
     {
-        constexpr int lengthAuth = 10; //максимальное количество символов системе аккаунта
+        
     }
     ///--------------------------------------------------------------------------------------
 
