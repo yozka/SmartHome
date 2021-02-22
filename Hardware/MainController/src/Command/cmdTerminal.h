@@ -1,9 +1,9 @@
 #pragma once
 
-#include "trmSecurity.h"
-#include "trmTerminal.h"
-#include "trmProviderServer.h"
-#include "trmProviderSerial.h"
+#include "../Terminal/trmSecurity.h"
+#include "../Terminal/trmTerminal.h"
+#include "../Terminal/trmProviderServer.h"
+#include "../Terminal/trmProviderSerial.h"
 
 #include "cmdTest.h"
 #include "cmdHelp.h"

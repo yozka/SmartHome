@@ -1,7 +1,7 @@
 #include "netMqtt.h"
-#include "sysUtils.h"
-#include "user_config.h"
-#include "board.h"
+#include "../Systems/sysUtils.h"
+#include "../Board/board.h"
+#include "../../user_config.h"
 ///--------------------------------------------------------------------------------------
 
 

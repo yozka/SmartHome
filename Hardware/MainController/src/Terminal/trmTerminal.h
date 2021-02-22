@@ -1,9 +1,11 @@
 #pragma once
-
 #include <Stream.h>
-#include "sysUtils.h"
+
 #include "trmParameters.h"
-#include "user_config.h"
+
+#include "../Systems/sysUtils.h"
+#include "../../user_config.h"
+
 
 
 namespace Terminal

@@ -1,6 +1,6 @@
 #pragma once
 #include <Arduino.h>
-#include "trmParameters.h"
+#include "../Terminal/trmParameters.h"
 
 
 namespace Command
@@ -16,18 +16,22 @@ namespace Command
 
      ///=====================================================================================
     ///
-    /// КОманда терминала, выводит информацию по памяти
+    /// Временная команда для внутренних тестов
     /// 
     /// 
     /// 
     ///--------------------------------------------------------------------------------------
-    class ACommandMemory
+    class ACommandTest
     {
         public:
 
-            static String name() { return F("Memory");}
+            static String name() { return F("Test");}
             static void execute(const Terminal::AParameters &param, Stream *console);
-            static void help(Stream *console);
+            static void help(Stream *console)
+            {
+                console->println();
+            }
+
     };
     ///--------------------------------------------------------------------------------------
 

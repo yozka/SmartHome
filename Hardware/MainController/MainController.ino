@@ -7,11 +7,11 @@
 
 
 #include "user_config.h"
-#include "sysTimer.h"
-#include "netSystem.h"
-#include "netMqtt.h"
-#include "cmdTerminal.h"
-#include "board.h"
+#include "src/Network/netSystem.h"
+#include "src/Network/netMqtt.h"
+#include "src/Command/cmdTerminal.h"
+#include "src/Board/board.h"
+#include "src/Systems/sysTimer.h"
 ///--------------------------------------------------------------------------------------
 
 

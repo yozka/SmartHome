@@ -1,6 +1,6 @@
 #pragma once
 #include <Arduino.h>
-#include "trmParameters.h"
+#include "../Terminal/trmParameters.h"
 
 
 namespace Command

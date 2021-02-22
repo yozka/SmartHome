@@ -1,9 +1,8 @@
 #pragma once
-#include <Arduino.h>
-#include "user_config.h"
+#include "../Terminal/trmParameters.h"
 
 
-namespace Board
+namespace Command
 {
     ///--------------------------------------------------------------------------------------
 
@@ -16,16 +15,18 @@ namespace Board
 
      ///=====================================================================================
     ///
-    /// 
+    /// Команда настройки даты на контроллере
     /// 
     /// 
     /// 
     ///--------------------------------------------------------------------------------------
-    class ABoard
+    class ACommandDate
     {
         public:
 
-
+            static String name() { return F("date");}
+            static void execute(const Terminal::AParameters &param, Stream *console);
+            static void help(Stream *console);
     };
     ///--------------------------------------------------------------------------------------
 
@@ -36,12 +37,21 @@ namespace Board
 
      ///=====================================================================================
     ///
-    /// Переменные для доступа
-    /// это глобальные переменные, 
+    /// Команда настройки времени на контроллере
+    /// 
+    /// 
     /// 
     ///--------------------------------------------------------------------------------------
-    extern ARelays relays;
+    class ACommandTime
+    {
+        public:
+
+            static String name() { return F("time");}
+            static void execute(const Terminal::AParameters &param, Stream *console);
+            static void help(Stream *console);
+    };
     ///--------------------------------------------------------------------------------------
+
 
 
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <Arduino.h>
-#include "trmParameters.h"
+#include "../Terminal/trmParameters.h"
 
 
 namespace Command
@@ -16,18 +16,21 @@ namespace Command
 
      ///=====================================================================================
     ///
-    /// Команда которая показывает состояние энергонезависемой памяти
+    /// КОманда терминала, выводит помощь по всем командам
     /// 
     /// 
     /// 
     ///--------------------------------------------------------------------------------------
-    class ACommandStorage
+    class ACommandHelp
     {
         public:
 
-            static String name() { return F("Storage");}
+            static String name() { return F("Help");}
             static void execute(const Terminal::AParameters &param, Stream *console);
-            static void help(Stream *console);
+            static void help(Stream *console)
+            {
+                
+            }
 
     };
     ///--------------------------------------------------------------------------------------

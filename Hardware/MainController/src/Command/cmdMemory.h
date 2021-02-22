@@ -1,5 +1,6 @@
 #pragma once
-#include "trmParameters.h"
+#include <Arduino.h>
+#include "../Terminal/trmParameters.h"
 
 
 namespace Command
@@ -10,32 +11,26 @@ namespace Command
 
 
 
-    
+
 
 
      ///=====================================================================================
     ///
-    /// Команда взаимодействия со сетевым интерфейсом
+    /// КОманда терминала, выводит информацию по памяти
     /// 
     /// 
     /// 
     ///--------------------------------------------------------------------------------------
-    class ACommandIPConfig
+    class ACommandMemory
     {
         public:
 
-            static String name() { return F("ipconfig");}
+            static String name() { return F("Memory");}
             static void execute(const Terminal::AParameters &param, Stream *console);
             static void help(Stream *console);
-
-        private:
-
-            static void info(Stream *console); //вывести информацию об сетевом соеденении
-            static void configHelp(Stream *console);
     };
     ///--------------------------------------------------------------------------------------
 
-    
 
 
 
@@ -45,4 +40,3 @@ namespace Command
 
     ///--------------------------------------------------------------------------------------
 }
-

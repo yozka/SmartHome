@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
-#include "trmParameters.h"
-#include "user_config.h"
+#include "../Terminal/trmParameters.h"
+#include "../../user_config.h"
 
 namespace Command
 {

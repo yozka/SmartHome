@@ -1,7 +1,7 @@
 #include "cmdTest.h"
 #include "cmdTerminal.h"
-#include "sysHash.h"
-#include "sysStorage.h"
+#include "../Systems/sysHash.h"
+#include "../Systems/sysStorage.h"
 
 using namespace Command;
 

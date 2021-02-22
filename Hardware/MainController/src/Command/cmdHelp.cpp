@@ -1,6 +1,6 @@
 #include "cmdHelp.h"
 #include "cmdTerminal.h"
-#include "user_config.h"
+#include "../../user_config.h"
 
 using namespace Command;
 

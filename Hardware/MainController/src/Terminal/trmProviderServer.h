@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
-#include "netSystem.h"
-#include "user_config.h"
+#include "../Network/netSystem.h"
+#include "../../user_config.h"
 
 namespace Terminal
 {
