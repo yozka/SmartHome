@@ -29,6 +29,10 @@ namespace Command
             static void execute(const Terminal::AParameters &param, Stream *console);
             static void help(Stream *console);
 
+        private:
+
+            static void info(Stream *console); //информация о протоколе
+            static void configHelp(Stream *console); //информация о внутренних параметров для конфигурации
     };
     ///--------------------------------------------------------------------------------------
 

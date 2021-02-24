@@ -29,6 +29,8 @@ namespace Network
     ///----------------------------------------------------------------------------------
     namespace Mqtt
     {
+        //само соедениение со сервером, и клиент протокола, 
+        //это глобальныая переменная
         EthernetClient tcp;
         MqttClient client(tcp);
     }
@@ -64,6 +66,7 @@ namespace Network
 
 
 
+
      ///=====================================================================================
     ///
     /// 
@@ -83,8 +86,16 @@ namespace Network
         const auto time = millis();
         if (time > mTimeReconnect || mLastConnect)
         {
-            mTimeReconnect = time + Config::Network::Mqtt::timeReconnect;
-            mLastConnect = reconnect();
+            mTimeReconnect = min(Config::Network::Mqtt::timeReconnect + mTimeStep, Config::Network::Mqtt::timeMax);
+            mTimeReconnect += time;
+            mTimeStep += Config::Network::Mqtt::timeStep;
+
+            mLastConnect = connect();
+            if (mLastConnect)
+            {
+                //было успешное подключение, сбросим таймер
+                mTimeStep = 0;
+            }
         }
     }
     ///--------------------------------------------------------------------------------------
@@ -99,10 +110,34 @@ namespace Network
     /// 
     /// 
     ///--------------------------------------------------------------------------------------
-    bool Network::AMqtt::reconnect()
+    void Network::AMqtt::reconnect()
+    {
+        if (Network::Mqtt::client.connected())
+        {
+            Network::Mqtt::tcp.stop();
+            Network::Mqtt::client.stop();
+        }
+        mLastConnect = connect();
+        if (mLastConnect)
+        {
+            mTimeStep = 0;
+        }
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// переподключение к серверу
+    /// 
+    /// 
+    /// 
+    ///--------------------------------------------------------------------------------------
+    bool Network::AMqtt::connect()
     {
         sys::AStorage storage;
-
 
 
         Network::Mqtt::client.setId(storage.readString(sys::hash_const("mqtt-clientId")));
@@ -111,7 +146,7 @@ namespace Network
 
     
         const String broker = storage.readString(sys::hash_const("mqtt-broker"));
-        const uint16_t port = storage.read_uint16(sys::hash_const("mqtt-port"), 1883);
+        const uint16_t port = storage.read_uint16(sys::hash_const("mqtt-port"), Config::Network::Mqtt::port);
         if (!Network::Mqtt::client.connect(broker.c_str(), port)) 
         {
             //проблема со связью
@@ -191,4 +226,189 @@ namespace Network
 
 
     }
+    ///--------------------------------------------------------------------------------------
 
+
+
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// возвратим, есть связь или нет
+    /// 
+    ///--------------------------------------------------------------------------------------
+    bool Network::AMqtt::isConnected() const
+    {
+        return Network::Mqtt::client.connected();
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// возвратим ошибку ввиде строчки
+    /// 
+    ///--------------------------------------------------------------------------------------
+    String Network::AMqtt::error() const
+    {
+        const auto code = Network::Mqtt::client.connectError();
+        switch (code)
+        {
+            case MQTT_CONNECTION_REFUSED            : return F("Connection refused");
+            case MQTT_CONNECTION_TIMEOUT            : return F("Connection timeout");
+            case MQTT_SUCCESS                       : return F("Success");
+            case MQTT_UNACCEPTABLE_PROTOCOL_VERSION : return F("Unacceptable protocol version");
+            case MQTT_IDENTIFIER_REJECTED           : return F("Identifier rejected");
+            case MQTT_SERVER_UNAVAILABLE            : return F("Server unavailable");
+            case MQTT_BAD_USER_NAME_OR_PASSWORD     : return F("Bad user name or password");
+            case MQTT_NOT_AUTHORIZED                : return F("Not authorized");
+        }
+        return String(code);
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// 
+    /// 
+    ///--------------------------------------------------------------------------------------
+    String Network::AMqtt::clientId() const
+    {
+        sys::AStorage storage;
+        return storage.readString(sys::hash_const("mqtt-clientId"));
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// 
+    /// 
+    ///--------------------------------------------------------------------------------------
+    void Network::AMqtt::setClientId(const String &clientId)
+    {
+        sys::AStorage storage;
+        storage.writeString(sys::hash_const("mqtt-clientId"), clientId);
+        reconnect();
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// 
+    /// 
+    ///--------------------------------------------------------------------------------------
+    String Network::AMqtt::login() const
+    {
+        sys::AStorage storage;
+        return storage.readString(sys::hash_const("mqtt-login"));
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// 
+    /// 
+    ///--------------------------------------------------------------------------------------
+    String Network::AMqtt::passwd() const
+    {
+        sys::AStorage storage;
+        return storage.readString(sys::hash_const("mqtt-passwd"));
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// установка логин и пароль
+    /// 
+    ///--------------------------------------------------------------------------------------
+    void Network::AMqtt::setUsernamePassword(const String &login, const String &passwd)
+    {
+        sys::AStorage storage;
+        storage.writeString(sys::hash_const("mqtt-login"), login);
+        storage.writeString(sys::hash_const("mqtt-passwd"), passwd);
+        reconnect();
+    }
+    ///--------------------------------------------------------------------------------------
+    
+
+
+
+     ///=====================================================================================
+    ///
+    /// 
+    /// 
+    ///--------------------------------------------------------------------------------------
+    String Network::AMqtt::broker() const
+    {
+        sys::AStorage storage;
+        return storage.readString(sys::hash_const("mqtt-broker"));
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// 
+    /// 
+    ///--------------------------------------------------------------------------------------
+    uint16_t Network::AMqtt::port() const
+    {
+        sys::AStorage storage;
+        return storage.read_uint16(sys::hash_const("mqtt-port"), Config::Network::Mqtt::port);
+    }
+    ///--------------------------------------------------------------------------------------
+
+
+
+
+     ///=====================================================================================
+    ///
+    /// установка брокера совместно с адресом
+    /// 
+    ///--------------------------------------------------------------------------------------
+    void Network::AMqtt::setBroker(const String &brokerAddressPort)
+    {
+        sys::AStorage storage;
+
+        String broker = brokerAddressPort;
+        uint16_t port = storage.read_uint16(sys::hash_const("mqtt-port"), Config::Network::Mqtt::port);
+
+        if (const auto idx = brokerAddressPort.lastIndexOf(':'); idx > 0)
+        {
+            //в адресе предположительно есть порт
+            const auto iPort = brokerAddressPort.substring(idx + 1).toInt();
+            if (iPort > 0)
+            {
+                port = iPort;
+                broker = brokerAddressPort.substring(0, idx);
+            }
+        }
+
+        //
+        storage.writeString(sys::hash_const("mqtt-broker"), broker);
+        storage.write_uint16(sys::hash_const("mqtt-port"), port);
+        reconnect();
+    }

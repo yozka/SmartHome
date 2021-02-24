@@ -82,19 +82,25 @@ String AParameters::queryIndex(const int index) const
     for(int i = 0; i < length; i++)
     {
         const auto data = mData[i];
-        if(data == ' ' && space) 
+        if(data == ' ')
         {
-            indexCurrent++;
-            space = false;
+            if (space)
+            {
+                indexCurrent++;
+                space = false;
+            }
         } 
-        else if(indexCurrent == index) 
+        else
         {
-            dataPart.concat(data);
             space = true;
-        } 
-        else if(indexCurrent > index) 
-        {
-            break;
+            if(indexCurrent == index) 
+            {
+                dataPart.concat(data);
+            } 
+            else if(indexCurrent > index) 
+            {
+                break;
+            }
         }
     }
     return dataPart;

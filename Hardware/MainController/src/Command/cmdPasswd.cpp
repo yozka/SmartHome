@@ -23,7 +23,7 @@ using namespace Command;
 ///--------------------------------------------------------------------------------------
  void ACommandPasswd::help(Stream *console)
  {
-      console->println(F("Change username and password"));
+      console->println(F("Change username and password for TCP telnet terminal"));
  }
 ///--------------------------------------------------------------------------------------
 
