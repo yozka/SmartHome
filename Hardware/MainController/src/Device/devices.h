@@ -47,6 +47,17 @@ namespace Device
             return {};
         }
 
+
+        //обновление девайса
+        template<class ...Args>
+        void update(const Args& ...args)
+        {
+            for (auto device : data)
+            {
+                device->update(args...);
+            }
+        }
+
     };
     ///--------------------------------------------------------------------------------------
 

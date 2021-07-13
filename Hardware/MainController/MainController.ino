@@ -33,7 +33,8 @@ Time::ASlowTimer slowTimer; //медленный таймер
 void setup() 
 {
     Board::setup();
-    Board::relays.setup();  
+    Board::relays.setup();
+    Board::buttons.setup();  
 
     Network::ethernet.setup();
     Network::mqtt.setup();
@@ -64,13 +65,12 @@ void loop()
         Terminal::providerSerial.update();
     }
 
+    //обработка входящий сообщений из сервера
     Network::mqtt.update();
 
     //обработка нажатия кнопок
+    const auto time = millis();
+    Board::buttons.update(time);
 
-    //обработка выводов
-    //relay
-    
-    //Board::meta::Relay10::name();
-    //Board::ARelay2::info::name();
+
 }

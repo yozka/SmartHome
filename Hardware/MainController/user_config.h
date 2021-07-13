@@ -25,7 +25,7 @@ namespace Config
 
             constexpr unsigned long timeReconnect   = 1000L * 30L; //время пересоздания соеденения 30 секунд
             constexpr unsigned long timeStep        = 1000L * 10L; //после не удачной попытки соеденения, увеличивам время для следующей попытки
-            constexpr unsigned long timeMax         = 1000L * 60L * 10L; //максимальное время ожидания
+            constexpr unsigned long timeMax         = 1000L * 60L * 10L; //максимальное время ожидания 10 минут
         }    
 
     }
@@ -35,9 +35,10 @@ namespace Config
 
 
     ///--------------------------------------------------------------------------------------
-    namespace Security
+    namespace Button
     {
-        
+        constexpr unsigned long timeHysteresisDown  = 200L; //время срабатывания вмомент нажатия на кнопку
+        constexpr unsigned long timeHysteresisUp    = 200L; //время срабатывания при отпускания кнопки
     }
     ///--------------------------------------------------------------------------------------
 

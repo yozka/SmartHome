@@ -97,6 +97,62 @@ namespace Board
 
 
 
+    //Описание кнопок
+    namespace meta
+    {
+        struct Button00  { static String name() { return F("Button00"); }};
+        struct Button01  { static String name() { return F("Button01"); }};
+        struct Button02  { static String name() { return F("Button02"); }};
+        struct Button03  { static String name() { return F("Button03"); }};
+        struct Button04  { static String name() { return F("Button04"); }};
+        struct Button05  { static String name() { return F("Button05"); }};
+        struct Button06  { static String name() { return F("Button06"); }};
+        struct Button07  { static String name() { return F("Button07"); }};
+        struct Button08  { static String name() { return F("Button08"); }};
+        struct Button09  { static String name() { return F("Button09"); }};
+        struct Button10  { static String name() { return F("Button10"); }};
+        struct Button11  { static String name() { return F("Button11"); }};
+        struct Button12  { static String name() { return F("Button12"); }};
+        struct Button13  { static String name() { return F("Button13"); }};
+        struct Button14  { static String name() { return F("Button14"); }};
+        struct Button15  { static String name() { return F("Button15"); }};
+    }
+
+
+    //Конфигурация кнопок <Пин контроллера, Описание реле>
+    using AButton00  = Device::TButton< CONTROLLINO_A0,  meta::Button00 >;
+    using AButton01  = Device::TButton< CONTROLLINO_A1,  meta::Button01 >;
+    using AButton02  = Device::TButton< CONTROLLINO_A2,  meta::Button02 >;
+    using AButton03  = Device::TButton< CONTROLLINO_A3,  meta::Button03 >;
+    using AButton04  = Device::TButton< CONTROLLINO_A4,  meta::Button04 >;
+    using AButton05  = Device::TButton< CONTROLLINO_A5,  meta::Button05 >;
+    using AButton06  = Device::TButton< CONTROLLINO_A6,  meta::Button06 >;
+    using AButton07  = Device::TButton< CONTROLLINO_A7,  meta::Button07 >;
+    using AButton08  = Device::TButton< CONTROLLINO_A8,  meta::Button08 >;
+    using AButton09  = Device::TButton< CONTROLLINO_A9,  meta::Button09 >;
+    using AButton10  = Device::TButton< CONTROLLINO_A10, meta::Button10 >;
+    using AButton11  = Device::TButton< CONTROLLINO_A11, meta::Button11 >;
+    using AButton12  = Device::TButton< CONTROLLINO_A12, meta::Button12 >;
+    using AButton13  = Device::TButton< CONTROLLINO_A13, meta::Button13 >;
+    using AButton14  = Device::TButton< CONTROLLINO_A14, meta::Button14 >;
+    using AButton15  = Device::TButton< CONTROLLINO_A15, meta::Button15 >;
+
+
+
+
+    //Список кнопок
+    using AButtons = Device::TDevices<   Device::AButton::ptr, //базовый класс реле
+                                                AButton00, AButton01, AButton02,
+                                                AButton03, AButton04, AButton05,
+                                                AButton06, AButton07, AButton08,
+                                                AButton09, AButton10, AButton11,
+                                                AButton12, AButton13, AButton14,
+                                                AButton15 >;
+
+
+
+
+
      ///=====================================================================================
     ///
     /// Настройка девайса
